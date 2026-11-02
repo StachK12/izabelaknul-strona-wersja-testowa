@@ -1,4 +1,7 @@
 ---
+// Stopka: u góry jasne zdjęcie (niebo, horyzont, pole i osoba siedząca na krześle),
+// pod nim jednolity ciemny panel z napisami. Napisy nie leżą na zdjęciu,
+// więc zawsze mają wysoki kontrast (biały na #161A16 = 17,6:1).
 import { Picture } from 'astro:assets';
 import Ikona from './Ikona.astro';
 import { strona, menu } from '../data/strona';
@@ -8,98 +11,143 @@ const tlo = zdjecie('stopka-pole.jpg');
 ---
 
 <footer class="stopka">
-  {
-    tlo && (
-      <Picture
-        class="stopka__tlo"
-        src={tlo}
-        alt=""
-        widths={[640, 1024, 1600]}
-        sizes="100vw"
-        formats={['avif', 'webp']}
-        quality={45}
-        loading="lazy"
-      />
-    )
-  }
-  <div class="stopka__nakladka"></div>
-
-  <div class="kontener stopka__wnetrze">
-    <div class="stopka__kolumna">
-      <p class="stopka__nazwa">{strona.nazwa}</p>
-      <p class="stopka__podpis">{strona.podpis}</p>
-      <ul class="stopka__kontakt">
-        <li>
-          <Ikona nazwa="telefon" />
-          <a href={strona.telefonLink}>{strona.telefon}</a>
-        </li>
-        <li>
-          <Ikona nazwa="pinezka" />
-          <a href={strona.mapa} rel="noopener" target="_blank">{strona.adres}<span class="sr-only"> (mapa Google, otwiera się w nowej karcie)</span></a>
-        </li>
-      </ul>
-    </div>
-
-    <nav class="stopka__kolumna" aria-label="Menu w stopce">
-      <ul class="stopka__menu">
-        <li><a href="/">Strona główna</a></li>
-        {menu.map((pozycja) => <li><a href={pozycja.adres}>{pozycja.tekst}</a></li>)}
-        <li><a href="/kontakt">Kontakt</a></li>
-      </ul>
-    </nav>
-
-    <div class="stopka__kolumna">
-      <p class="stopka__etykieta">Sprawdź również:</p>
-      <ul class="stopka__social">
-        <li>
-          <a href={strona.facebook} rel="noopener" target="_blank" aria-label="Facebook (otwiera się w nowej karcie)"><Ikona nazwa="facebook" /></a>
-        </li>
-        <li>
-          <a href={strona.instagram} rel="noopener" target="_blank" aria-label="Instagram (otwiera się w nowej karcie)"><Ikona nazwa="instagram" /></a>
-        </li>
-        <li>
-          <a href={strona.linkedin} rel="noopener" target="_blank" aria-label="LinkedIn (otwiera się w nowej karcie)"><Ikona nazwa="linkedin" /></a>
-        </li>
-      </ul>
-    </div>
+  <!-- Filtr rozjaśniający zdjęcie: unosi ciemne partie (pole), prawie nie zmienia jasnych (chmury) -->
+  <svg class="stopka__filtr" width="0" height="0" aria-hidden="true" focusable="false">
+    <filter id="stopka-rozjasnienie" color-interpolation-filters="sRGB">
+      <feComponentTransfer>
+        <feFuncR type="gamma" amplitude="1" exponent="0.75"></feFuncR>
+        <feFuncG type="gamma" amplitude="1" exponent="0.75"></feFuncG>
+        <feFuncB type="gamma" amplitude="1" exponent="0.75"></feFuncB>
+      </feComponentTransfer>
+    </filter>
+  </svg>
+  <div class="stopka__zdjecie">
+    {
+      tlo && (
+        <Picture
+          class="stopka__obraz"
+          src={tlo}
+          alt=""
+          widths={[640, 1024, 1600]}
+          sizes="(max-width: 47.99rem) 200vw, 100vw"
+          formats={['avif', 'webp']}
+          quality={55}
+          loading="lazy"
+        />
+      )
+    }
   </div>
 
-  <div class="kontener stopka__dol">
-    <a href="/polityka-prywatnosci">Polityka prywatności</a>
+  <div class="stopka__panel">
+    <div class="kontener stopka__wnetrze">
+      <div class="stopka__kolumna">
+        <p class="stopka__nazwa">{strona.nazwa}</p>
+        <p class="stopka__podpis">{strona.podpis}</p>
+        <ul class="stopka__kontakt">
+          <li>
+            <Ikona nazwa="telefon" />
+            <a href={strona.telefonLink}>{strona.telefon}</a>
+          </li>
+          <li>
+            <Ikona nazwa="pinezka" />
+            <a href={strona.mapa} rel="noopener" target="_blank">{strona.adres}<span class="sr-only"> (mapa Google, otwiera się w nowej karcie)</span></a>
+          </li>
+        </ul>
+      </div>
+
+      <nav class="stopka__kolumna" aria-label="Menu w stopce">
+        <ul class="stopka__menu">
+          <li><a href="/">Strona główna</a></li>
+          {menu.map((pozycja) => <li><a href={pozycja.adres}>{pozycja.tekst}</a></li>)}
+          <li><a href="/kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+
+      <div class="stopka__kolumna">
+        <p class="stopka__etykieta">Sprawdź również:</p>
+        <ul class="stopka__social">
+          <li>
+            <a href={strona.facebook} rel="noopener" target="_blank" aria-label="Facebook (otwiera się w nowej karcie)"><Ikona nazwa="facebook" /></a>
+          </li>
+          <li>
+            <a href={strona.instagram} rel="noopener" target="_blank" aria-label="Instagram (otwiera się w nowej karcie)"><Ikona nazwa="instagram" /></a>
+          </li>
+          <li>
+            <a href={strona.linkedin} rel="noopener" target="_blank" aria-label="LinkedIn (otwiera się w nowej karcie)"><Ikona nazwa="linkedin" /></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="kontener stopka__dol">
+      <a href="/polityka-prywatnosci">Polityka prywatności</a>
+    </div>
   </div>
 </footer>
 
 <style>
   .stopka {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
     color: var(--bialy);
     background: var(--ciemny);
   }
 
-  .stopka :global(.stopka__tlo),
-  .stopka :global(.stopka__tlo img) {
+  .stopka__filtr {
     position: absolute;
-    inset: 0;
-    z-index: -2;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 56%;
+    width: 0;
+    height: 0;
+    overflow: hidden;
   }
 
-  .stopka__nakladka {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(180deg, rgba(22, 26, 22, 0.82) 0%, rgba(22, 26, 22, 0.88) 55%, rgba(22, 26, 22, 0.94) 100%);
+  /* ---------- Zdjęcie ----------
+   * Osoba na krześle stoi na 67,4% szerokości i ok. 55% wysokości zdjęcia.
+   * object-position i transform-origin trzymają ten punkt w kadrze przy każdej szerokości
+   * ekranu. Na telefonie zdjęcie jest przybliżone, żeby osoba nie była tylko kropką. */
+  .stopka__zdjecie {
+    --punkt: 67.4% 55%;
+    --przyblizenie: 1;
+    position: relative;
+    height: clamp(17rem, 27vw, 31rem);
+    overflow: hidden;
+    background: #cfe0ee;
+  }
+
+  @media (max-width: 47.99rem) {
+    .stopka__zdjecie {
+      --przyblizenie: 1.9;
+      height: 19rem;
+    }
+  }
+
+  .stopka__zdjecie :global(picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .stopka__zdjecie :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: var(--punkt);
+    filter: url(#stopka-rozjasnienie) saturate(1.08);
+    transform: scale(var(--przyblizenie));
+    transform-origin: var(--punkt);
+  }
+
+  /* ---------- Panel z napisami ---------- */
+  .stopka__panel {
+    position: relative;
+    margin-top: -1.75rem;
+    border-radius: var(--zaokraglenie-zdjecia) var(--zaokraglenie-zdjecia) 0 0;
+    background: var(--ciemny);
   }
 
   .stopka__wnetrze {
     display: grid;
     gap: 2.5rem;
-    padding-top: clamp(4rem, 10vw, 7rem);
+    padding-top: clamp(3rem, 6vw, 4.5rem);
     padding-bottom: 2.5rem;
   }
 
@@ -162,6 +210,7 @@ const tlo = zdjecie('stopka-pole.jpg');
 
   .stopka__menu li {
     margin-bottom: 0.45rem;
+    font-size: 1.0625rem;
   }
 
   .stopka__etykieta {
@@ -203,6 +252,6 @@ const tlo = zdjecie('stopka-pole.jpg');
     padding-top: 1.25rem;
     padding-bottom: 1.75rem;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
-    font-size: 0.9375rem;
+    font-size: 1rem;
   }
 </style>

@@ -101,7 +101,7 @@ Wszystkie zdjęcia są w folderze **`zdjecia/`**. Strona sama:
 |---|---|
 | `strona-glowna-brzoza.jpg` | strona główna – duże zdjęcie na górze (także obrazek przy udostępnianiu linku) |
 | `portret-czarny-stroj.jpg` | strona główna (przedstawienie) i „Dla szkoły” |
-| `stopka-pole.jpg` | tło stopki na każdej stronie |
+| `stopka-pole.jpg` | zdjęcie w stopce na każdej stronie (pole, horyzont i osoba na krześle; strona sama je rozjaśnia) |
 | `o-mnie-portret.jpg` | O mnie |
 | `czasdolasu-portret.jpg` | CZASdoLASU – zdjęcie na górze |
 | `czasdolasu-polana.jpg` | CZASdoLASU – polana obok formularza |
@@ -109,9 +109,9 @@ Wszystkie zdjęcia są w folderze **`zdjecia/`**. Strona sama:
 | `szkolenie-jedna-klasa.jpg` | Dla szkoły – „Jedna klasa – wiele potrzeb” oraz karta wydarzenia |
 | `szkolenie-sala.jpg` | Dla szkoły – „Nowa podstawa programowa…” (także obrazek przy udostępnianiu) |
 | `szkolenie-podroz-bohatera.jpg` | Dla szkoły – „Od wyzwania do zmiany” |
-| `dla-rodzicow-portret.jpg` | Dla rodziców – zdjęcie na górze |
-| `dla-rodzicow-paw.jpg` | Dla rodziców – przy „Jedna klasa – wiele potrzeb” |
-| `dla-rodzicow-brzoza.jpg`, `szkolenie-konferencja.jpg` | **obecnie nieużywane** – zapas do sekcji, które na starej stronie były ukryte |
+| `dla-rodzicow-portret.jpg`, `dla-rodzicow-paw.jpg`, `dla-rodzicow-brzoza.jpg`, `szkolenie-konferencja.jpg` | **obecnie nieużywane** – zostały po usuniętej stronie „Dla rodziców” i po sekcjach, które na starej stronie były ukryte |
+
+> **Zdjęcie w stopce:** strona ustawia kadr tak, żeby osoba siedząca na krześle była widoczna na każdym ekranie, także na telefonie. Zakłada, że osoba jest w miejscu 67% szerokości i 55% wysokości zdjęcia. Jeśli kiedyś podmienisz `stopka-pole.jpg` na zupełnie inne zdjęcie, popraw wartość `--punkt` w pliku `src/components/Stopka.astro` (pierwsza liczba to położenie od lewej, druga od góry).
 
 > **Nazwa musi być identyczna**, łącznie z końcówką `.jpg` pisaną małymi literami. Zdjęcie z telefonu często ma nazwę `….JPG` albo `….jpeg`. Przed wgraniem zmień ją na dokładnie taką jak w tabeli, inaczej wgrany plik nie zastąpi starego.
 
@@ -136,7 +136,7 @@ Każda podstrona to jeden plik w folderze `src/pages/`:
 | Najbliższe wydarzenia | `src/pages/najblizsze-wydarzenia.astro` (same wydarzenia: `wydarzenia.yaml`) |
 | CZASdoLASU | `src/pages/czas-do-lasu.astro` |
 | Dla szkoły (szkolenia) | `src/pages/szkolenia.astro` |
-| Dla rodziców | `src/pages/dla-rodzicow.astro` |
+| Superwizja w szkole | `src/pages/superwizja-w-szkole.astro` |
 | Mentoring | `src/pages/mentoring.astro` |
 | Kontakt | `src/pages/kontakt.astro` |
 | Polityka prywatności | `src/tresci/polityka-prywatnosci.md` (zwykły tekst) |
@@ -186,7 +186,6 @@ Zmieniaj tylko tekst **wewnątrz apostrofów** `'…'`. Nie usuwaj apostrofów a
 Opisy szkoleń powtarzają się na kilku stronach. Jeśli zmieniasz nazwę lub opis szkolenia, zmień go we wszystkich miejscach (szukaj nazwy przez Ctrl+F):
 - `src/pages/szkolenia.astro` – karty u góry, sekcja szkolenia, lista w formularzu i dane dla Google (na górze pliku);
 - `src/pages/czas-do-lasu.astro` – karty oferty i lista w formularzu;
-- `src/pages/dla-rodzicow.astro` – sekcja „Jedna klasa – wiele potrzeb”;
 - `wydarzenia.yaml` – tytuły wydarzeń.
 
 > Pisz zwykłe spacje. Twarde spacje po jednoliterowych słowach (a, i, o, u, w, z), które nie pozwalają im zostać same na końcu linii, strona dodaje sama przy publikacji.

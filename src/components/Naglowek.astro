@@ -70,7 +70,7 @@ const aktywna = (adres: string) => sciezka === adres;
   document.addEventListener('pointerdown', (zdarzenie) => {
     if (przelacznik?.getAttribute('aria-expanded') === 'true' && !naglowek?.contains(zdarzenie.target as Node)) ustaw(false);
   });
-  window.matchMedia('(min-width: 75rem)').addEventListener('change', () => ustaw(false));
+  window.matchMedia('(min-width: 78rem)').addEventListener('change', () => ustaw(false));
 </script>
 
 <style>
@@ -86,6 +86,7 @@ const aktywna = (adres: string) => sciezka === adres;
   }
 
   .naglowek__wnetrze {
+    max-width: 90rem; /* nagłówek jest szerszy niż treść strony, żeby logo i menu miały miejsce */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -100,7 +101,7 @@ const aktywna = (adres: string) => sciezka === adres;
   }
 
   .naglowek__logo :global(img) {
-    width: clamp(210px, 58vw, 340px);
+    width: clamp(170px, 56vw, 340px);
     height: auto;
   }
 
@@ -166,7 +167,7 @@ const aktywna = (adres: string) => sciezka === adres;
   }
 
   /* Telefon i tablet: menu rozwijane pod nagłówkiem */
-  @media (max-width: 74.99rem) {
+  @media (max-width: 77.99rem) {
     .menu {
       position: absolute;
       inset: 100% 0 auto;
@@ -213,7 +214,7 @@ const aktywna = (adres: string) => sciezka === adres;
   }
 
   /* Komputer: menu w jednym wierszu */
-  @media (min-width: 75rem) {
+  @media (min-width: 78rem) {
     .naglowek__przelacznik {
       display: none;
     }
@@ -235,7 +236,14 @@ const aktywna = (adres: string) => sciezka === adres;
     }
   }
 
-  @media (min-width: 75rem) and (max-width: 89.99rem) {
+  /* Najwęższe telefony (320 px): logo i przycisk „Menu” muszą zmieścić się w jednym wierszu */
+  @media (max-width: 22rem) {
+    .naglowek__wnetrze {
+      gap: 0.5rem;
+    }
+  }
+
+  @media (min-width: 78rem) and (max-width: 89.99rem) {
     .naglowek__logo :global(img) {
       width: 270px;
     }

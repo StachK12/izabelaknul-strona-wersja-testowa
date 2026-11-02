@@ -2,7 +2,7 @@
 
 Wszystkie teksty zostały przeniesione **dosłownie** ze starej strony (stan z 19.10.2026, pełny spis: `docs/inwentaryzacja.md`). Ten dokument wymienia **każdą** różnicę. Zgodność sprawdzał automat: porównał każdą widoczną linijkę starej strony z nową. Wszystkie różnice wypisane poniżej są zamierzone, innych nie ma.
 
-## 1. Poprawione literówki i interpunkcja (53)
+## 1. Poprawione literówki i interpunkcja (50)
 
 Poprawiane były tylko:
 - literówki i brakujące polskie znaki;
@@ -36,9 +36,6 @@ Słowa, kolejność i wielkie litery zostały bez zmian.
 | Dla szkoły (/szkolenia) | (fundamentalnych, przekrojowych),  doświadczeń edukacyjnych | (fundamentalnych, przekrojowych), doświadczeń edukacyjnych | podwójna spacja |
 | Dla szkoły (/szkolenia) | co z podstawy programowej  naprawdę wynika | co z podstawy programowej naprawdę wynika | podwójna spacja |
 | Dla szkoły (/szkolenia) | do swojej praktyki- od formułowania celów w języku dziecka | do swojej praktyki – od formułowania celów w języku dziecka | dywiz → półpauza |
-| Dla rodziców | która powstała  z mojego realnego doświadczenia | która powstała z mojego realnego doświadczenia | podwójna spacja |
-| Dla rodziców | doświadczenia - wieloletniej pracy pedagożki i edukatorki. | doświadczenia – wieloletniej pracy pedagożki i edukatorki. | dywiz → półpauza |
-| Dla rodziców | JEDNA KLASA- WIELE POTRZEB. | JEDNA KLASA – WIELE POTRZEB. | dywiz → półpauza |
 | Mentoring | Zapłacisz za to najdroższa walutą jaką jest ich dobra wola. | Zapłacisz za to najdroższą walutą, jaką jest ich dobra wola. | literówka, brakujący przecinek |
 | Mentoring | Mentoring rozumiem jako towarzyszenie w drodze - w odkrywaniu własnych zasobów | Mentoring rozumiem jako towarzyszenie w drodze – w odkrywaniu własnych zasobów | dywiz → półpauza |
 | Mentoring | zaczyna się od świadomości siebie - swoich wartości | zaczyna się od świadomości siebie – swoich wartości | dywiz → półpauza |
@@ -78,7 +75,7 @@ Słowa, kolejność i wielkie litery zostały bez zmian.
 | Strona „Dziękuję” (/dziekuje) | „Dziękuję, wiadomość została wysłana.”, przycisk „Wróć na stronę główną” | strona po wysłaniu formularza bez JavaScriptu |
 | Strona 404 | „Nie znaleziono strony”, „Ta strona nie istnieje albo zmieniła adres.” | nowa strona błędu |
 | Nowa podstrona /kontakt | nagłówek „Skontaktuj się”, formularz, telefon, adres, media społecznościowe (teksty ze starej strony) | wyraźny kontakt z każdej strony |
-| Menu | pozycje „Mentoring” i przycisk „Kontakt” (pozycja „Strona główna” jest w stopce, a w menu prowadzi do niej logo) | zgodnie z zaakceptowaną mapą strony |
+| Menu | pozycje „Mentoring”, „Superwizja w szkole” (zamiast „Dla rodziców”) i przycisk „Kontakt” (pozycja „Strona główna” jest w stopce, a w menu prowadzi do niej logo) | zgodnie z zaakceptowaną mapą strony i decyzją z 2.11.2026 |
 | Stopka | „Izabela Knul”, „szkolenia i mentoring” (napis z logo), menu stron, link tel: przy numerze | nawigacja |
 | Na dole podstron | pasek „Skontaktuj się” z przyciskiem „Skontaktuj się” i numerem telefonu | wymóg: wyraźne CTA na każdej podstronie |
 | Najbliższe wydarzenia | komunikat, gdy brak terminów: „Obecnie nie ma zaplanowanych terminów. Nowe wydarzenia pojawią się tutaj wkrótce – zapraszam do kontaktu.” | jedyne wydarzenie (03.06 / 10.06.2026) już minęło i schowało się automatycznie |
@@ -96,6 +93,8 @@ Słowa, kolejność i wielkie litery zostały bez zmian.
   - ręczne myślniki „-podmioty…”, „-organy…” stały się listą punktowaną;
   - jedno zdanie rozbite przypadkiem na 3 akapity jest jednym akapitem;
   - adresy https://www.izabelaknul.pl i adres Facebooka są klikalnymi linkami.
+- **Stopka (2.11.2026):** zdjęcie jest jasne i w całości widoczne (niebo, horyzont, pole i osoba siedząca na krześle). Napisy leżą pod nim na jednolitym ciemnym panelu, więc nie zlewają się z tłem. Wcześniej zdjęcie było przykryte ciemną nakładką, a napisy leżały na niej.
+- **Nagłówek (2.11.2026):** logo jest większe, a ozdobne kreski z listkiem zostały usunięte ze wszystkich stron.
 - **Hasła i wyróżnienia,** które były złote, są teraz brązowe (#7A5B2F, kolor z obecnej palety). Złoty tekst na białym tle był nieczytelny (kontrast 2,26:1).
 - **Hasła na stronie głównej i nagłówki na Mentoringu** wcześniej „wlatywały” dopiero przy przewijaniu i bez tego zostawało puste miejsce. Teraz są zawsze widoczne, z delikatnym pojawieniem się.
 
@@ -107,6 +106,20 @@ Były **ukryte na wszystkich urządzeniach**, więc nikt ich nie widział. Zgodn
   - sekcja „CO KAZDY RODZIC POWINIEN WIEDZIEĆ? / PRZEWODNIK PO SZKOLE W PIGUŁCE” (opis, 8 korzyści, czas 1,5 h);
   - karta tego warsztatu (widoczna tylko przy szerokości 480–767 px);
   - ukryte okienko „Zapisz się na szkolenie - ocenianie kształtujące”.
-- **Dla rodziców:** karta i sekcja „STĄD. DOKĄD? PODRÓŻ BOHATERA” (6 korzyści, 4 godziny, opis, zdjęcie `dla-rodzicow-brzoza.jpg`).
+- **Strona „Dla rodziców”** została w całości zastąpiona stroną „Superwizja w szkole” (decyzja z 2.11.2026). Jej teksty, razem z ukrytą ofertą „STĄD. DOKĄD? PODRÓŻ BOHATERA”, są w `docs/inwentaryzacja.md` i w historii repozytorium. Stary adres `/dla-rodzicow` przekierowuje na `/superwizja-w-szkole`.
 - **Pozostałości kreatora:** okno zgody na pliki cookie (nowa strona nie używa śledzących plików cookie), angielskie przyciski galerii, puste akapity, obrazek do udostępniania z obcego szablonu „NUTRI FIT”.
 - **Mapa Google na kluczu API kreatora WebWave:** zastąpiona mapą ładowaną po kliknięciu.
+
+## 5. Strona „Superwizja w szkole” (z pliku superwizja_.docx)
+
+Strona zastąpiła „Dla rodziców” (adres `/superwizja-w-szkole`, w menu w tym samym miejscu). Teksty pochodzą z załączonego dokumentu i są przepisane **dosłownie**. Automat porównał wszystkie 61 akapitów dokumentu z gotową stroną: wszystkie są na stronie, a na stronie nie ma żadnego tekstu spoza dokumentu. Różnice:
+
+| Gdzie | W dokumencie | Na stronie | Dlaczego |
+|---|---|---|---|
+| 6 miejsc w tekście (np. „…sytuacjach szkolnych — bez oceniania…”) | długa pauza „—” | półpauza „–” | tak jak na całej reszcie strony |
+| Przycisk w ramce kontaktu | „Formularz kontaktowy na stronie internetowej” (link na adres tymczasowy …netlify.app/kontakt) | „Formularz kontaktowy” (zwykły link do `/kontakt`) | napis powstał dla dokumentu wysyłanego szkołom, a na samej stronie „na stronie internetowej” brzmi dziwnie. Adres tymczasowy zastąpił link wewnętrzny |
+| „Kontakt: +48 602 67 77 07” | pogrubiony tekst | przycisk, który wybiera numer na telefonie (tekst ten sam) | wygodniejsze na telefonie |
+| Listy korzyści | punktory „•” wpisane ręcznie | złote punktory strony (jak w Mentoringu) | spójny wygląd |
+| Nagłówek i stopka dokumentu („IZABELA KNUL / SZKOLENIA I MENTORING”, „OFERTA SUPERWIZJI DLA SZKÓŁ · 1”) | są | pominięte | to elementy wydruku, a nie treść strony |
+| Tytuł w Google i opis strony | brak (jest tylko tytuł pliku) | „Superwizja dla nauczycieli i dyrektorów”, a opis zbudowany wyłącznie z faktów z dokumentu (2 godziny, do 12 osób, stacjonarnie) | SEO |
+| Układ | tabele i ramki | kafelki, karty i listy w stylu strony Mentoring, w tej samej kolejności co w dokumencie | spójność ze stroną |

@@ -4,6 +4,8 @@
 # w drugą stronę zrobiłoby pętlę. Adres kanoniczny w kodzie strony to /o-mnie.
 /o-mnie-2                 /o-mnie.html           200
 /polityka-prywatnosci-2   /polityka-prywatnosci  301
+# Strona „Dla rodziców” została zastąpiona stroną „Superwizja w szkole”.
+/dla-rodzicow             /superwizja-w-szkole   301
 /sitemap                  /sitemap-index.xml     301
 # Stary adres mapy strony pokazuje nową mapę.
 /sitemap.xml              /sitemap-index.xml     200

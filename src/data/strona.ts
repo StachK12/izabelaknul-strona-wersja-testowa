@@ -23,6 +23,6 @@ export const menu = [
   { tekst: 'CZASdoLASU', adres: '/czas-do-lasu' },
   { tekst: 'Dla szkoły', adres: '/szkolenia' },
   { tekst: 'Mentoring', adres: '/mentoring' },
-  { tekst: 'Dla rodziców', adres: '/dla-rodzicow' },
+  { tekst: 'Superwizja w szkole', adres: '/superwizja-w-szkole' },
   { tekst: 'Najbliższe wydarzenia', adres: '/najblizsze-wydarzenia' },
 ];

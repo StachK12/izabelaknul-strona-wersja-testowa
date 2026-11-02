@@ -1,0 +1,345 @@
+---
+import Uklad from '../layouts/Uklad.astro';
+import Ikona from '../components/Ikona.astro';
+import { strona } from '../data/strona';
+
+// Twarde spacje w numerze, żeby przycisk nie łamał się w środku numeru telefonu
+const telefon = strona.telefon.replace(/ /g, '\u00a0');
+
+const opis =
+  'Superwizja dla nauczycieli i dyrektorów: grupowe spotkania superwizyjne w szkole, 2 godziny, do 12 osób w grupie, stacjonarnie w zgłaszającej się szkole.';
+
+const daneStrukturalne = [
+  {
+    '@type': 'Service',
+    '@id': `${strona.adresStrony}/superwizja-w-szkole#superwizja`,
+    name: 'Superwizja dla nauczycieli i dyrektorów',
+    serviceType: 'Superwizja',
+    description: opis,
+    url: `${strona.adresStrony}/superwizja-w-szkole`,
+    inLanguage: 'pl-PL',
+    audience: { '@type': 'EducationalAudience', educationalRole: 'nauczyciele i dyrektorzy' },
+    provider: { '@id': `${strona.adresStrony}/#izabela-knul` },
+  },
+];
+---
+
+<!--
+  Strona „Superwizja w szkole”. Treść pochodzi z pliku superwizja_.docx (oferta dla szkół).
+  Układ i style jak na stronie Mentoring. Teksty są zwykłym tekstem między znacznikami,
+  więc można je zmieniać bezpośrednio w tym pliku.
+-->
+<Uklad tytul="Superwizja dla nauczycieli i dyrektorów" opis={opis} daneStrukturalne={daneStrukturalne} pasekKontaktu={false}>
+  <!-- Tytuł, wstęp i najważniejsze fakty -->
+  <section class="sekcja" aria-labelledby="superwizja-tytul">
+    <div class="kontener kontener--waski">
+      <header class="tytul-strony" data-pokaz>
+        <h1 id="superwizja-tytul">SUPERWIZJA</h1>
+      </header>
+
+      <div class="wstep" data-pokaz>
+        <h2 class="naglowek-sekcji wycentrowane">DLA NAUCZYCIELI I DYREKTORÓW</h2>
+        <p class="prowadzenie">Chcę wspierać nauczycieli i dyrektorów, aby łatwiej było im mierzyć się z codziennymi wyzwaniami pracy w szkole.</p>
+        <p>Proponuję grupowe spotkania superwizyjne dla nauczycieli oraz osobne grupy dla dyrektorów. To przestrzeń do spokojnej, uporządkowanej rozmowy o realnych sytuacjach szkolnych – bez oceniania i presji natychmiastowych rozwiązań.</p>
+      </div>
+
+      <ul class="fakty" data-pokaz style="--opoznienie: 0.1s">
+        <li><strong>2 GODZINY</strong><span>czas jednego spotkania</span></li>
+        <li><strong>DO 12 OSÓB</strong><span>w jednej grupie</span></li>
+        <li><strong>STACJONARNIE</strong><span>w zgłaszającej się szkole</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Wsparcie, które przekłada się na codzienną pracę + kto może zainicjować spotkania -->
+  <section class="sekcja sekcja--piasek" aria-labelledby="wsparcie-naglowek">
+    <div class="kontener kontener--waski">
+      <h2 id="wsparcie-naglowek" class="naglowek-sekcji wycentrowane" data-pokaz>Wsparcie, które przekłada się na codzienną pracę</h2>
+      <div data-pokaz style="--opoznienie: 0.1s">
+        <p>Praca w szkole wymaga wielu decyzji podejmowanych pod presją czasu, emocji i oczekiwań. Nauczyciele mierzą się z trudnymi sytuacjami w klasie i rozmowami z rodzicami, a dyrektorzy – także z odpowiedzialnością za zespół i organizację pracy szkoły.</p>
+        <p>Superwizja daje przestrzeń, by zatrzymać się przy konkretnym doświadczeniu, zrozumieć własne reakcje, przyjrzeć się różnym perspektywom i poszukać rozwiązań możliwych do zastosowania w codziennej pracy.</p>
+      </div>
+    </div>
+
+    <div class="kontener">
+      <h3 class="podnaglowek wycentrowane" data-pokaz>KTO MOŻE ZAINICJOWAĆ SPOTKANIA?</h3>
+      <div class="siatka-dwie">
+        <article class="karta karta--biala" data-pokaz>
+          <h4 class="karta__tytul">DYREKTORZY SZKÓŁ</h4>
+          <p>Możecie zorganizować superwizję dla nauczycieli w swojej szkole, a także skorzystać z odrębnych spotkań w gronie dyrektorów i wicedyrektorów.</p>
+        </article>
+        <article class="karta karta--biala" data-pokaz style="--opoznienie: 0.1s">
+          <h4 class="karta__tytul">NAUCZYCIELE</h4>
+          <p>Jeśli widzicie w zespole potrzebę wspólnej refleksji nad trudnościami, możecie zaproponować dyrekcji organizację superwizji w Waszej szkole.</p>
+        </article>
+      </div>
+
+      <article class="karta karta--biala karta--odstep" data-pokaz>
+        <h3 class="karta__tytul">OSOBNA SUPERWIZJA DLA DYREKTORÓW</h3>
+        <p>Dyrektorom i wicedyrektorom proponuję spotkania w odrębnej grupie – bez udziału nauczycieli. Można w niej przyjrzeć się trudnym decyzjom, relacjom w zespole, rozmowom z rodzicami i odpowiedzialności za szkołę. Wspólna refleksja pomaga zobaczyć nowe możliwości działania.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 01 / Korzyści dla nauczycieli i szkoły -->
+  <section class="sekcja" aria-labelledby="korzysci-naglowek">
+    <div class="kontener kontener--waski">
+      <header class="naglowek-rozdzialu wycentrowane" data-pokaz>
+        <h2 id="korzysci-naglowek" class="etykieta">01 / KORZYŚCI DLA NAUCZYCIELI I SZKOŁY</h2>
+      </header>
+      <p class="prowadzenie" data-pokaz style="--opoznienie: 0.1s">Superwizja nie zastępuje codziennej współpracy w szkole. Daje jednak czas i strukturę, których często brakuje w natłoku obowiązków – po to, by lepiej rozumieć trudności i świadomiej na nie odpowiadać.</p>
+    </div>
+
+    <div class="kontener">
+      <div class="siatka-dwie korzysci">
+        <article class="karta" data-pokaz>
+          <h3 class="karta__tytul">DLA NAUCZYCIELI</h3>
+          <ul class="lista">
+            <li>Większa jasność w rozumieniu trudnych sytuacji i własnych reakcji.</li>
+            <li>Wymiana doświadczeń oraz możliwość zobaczenia sprawy z innej perspektywy.</li>
+            <li>Dostrzeganie własnych zasobów i tego, co już działa.</li>
+            <li>Wypracowanie konkretnego, realnego kroku do zastosowania w pracy.</li>
+          </ul>
+        </article>
+        <article class="karta" data-pokaz style="--opoznienie: 0.1s">
+          <h3 class="karta__tytul">DLA SZKOŁY</h3>
+          <ul class="lista">
+            <li>Przemyślana forma wsparcia rozwoju zawodowego zespołu.</li>
+            <li>Przestrzeń do uczenia się na rzeczywistych doświadczeniach szkolnych.</li>
+            <li>Wzmacnianie kultury dialogu i współpracy bez wzajemnego oceniania.</li>
+            <li>Lepsze warunki do szukania rozwiązań powtarzających się trudności.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 / Superwizja dla nauczycieli -->
+  <section class="sekcja sekcja--piasek" aria-labelledby="sytuacje-naglowek">
+    <div class="kontener">
+      <header class="naglowek-rozdzialu wycentrowane" data-pokaz>
+        <p class="etykieta">02 / SUPERWIZJA DLA NAUCZYCIELI</p>
+        <h2 id="sytuacje-naglowek" class="naglowek-sekcji">Pracujemy na prawdziwych sytuacjach ze szkoły</h2>
+      </header>
+
+      <div class="siatka-dwie">
+        <article class="karta karta--biala" data-pokaz>
+          <h3 class="karta__tytul">RELACJE Z UCZNIAMI</h3>
+          <p>Powtarzające się konflikty, trudności w stawianiu granic, odmowa współpracy.</p>
+        </article>
+        <article class="karta karta--biala" data-pokaz style="--opoznienie: 0.1s">
+          <h3 class="karta__tytul">ROZMOWY Z RODZICAMI</h3>
+          <p>Sytuacje, w których oczekiwania i emocje utrudniają porozumienie.</p>
+        </article>
+        <article class="karta karta--biala" data-pokaz>
+          <h3 class="karta__tytul">REAKCJE NAUCZYCIELA</h3>
+          <p>Napięcie, frustracja, obawa przed utratą autorytetu lub poczucie bezradności.</p>
+        </article>
+        <article class="karta karta--biala" data-pokaz style="--opoznienie: 0.1s">
+          <h3 class="karta__tytul">CODZIENNE DECYZJE</h3>
+          <p>Pytania o to, co zrobić inaczej, aby nie powielać nieskutecznych schematów.</p>
+        </article>
+      </div>
+
+      <div class="zakonczenie wycentrowane" data-pokaz>
+        <p class="haslo haslo--zdanie">Nie wychodzisz ze spotkania z cudzą „receptą”, lecz z lepszym rozumieniem sytuacji i własnym pomysłem na następny krok.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 / Jak przebiega spotkanie? -->
+  <section class="sekcja" aria-labelledby="przebieg-naglowek">
+    <div class="kontener kontener--waski">
+      <header class="naglowek-rozdzialu wycentrowane" data-pokaz>
+        <p class="etykieta">03 / JAK PRZEBIEGA SPOTKANIE?</p>
+        <h2 id="przebieg-naglowek" class="naglowek-sekcji">Od doświadczenia do konkretnego działania</h2>
+      </header>
+      <div data-pokaz style="--opoznienie: 0.1s">
+        <p class="prowadzenie">W pracy korzystam z Cyklu Gibbsa.</p>
+        <p>Najpierw ustalamy pytanie superwizyjne, a dopiero później przechodzimy przez kolejne etapy refleksji. Grupa włącza się stopniowo – nie zaczyna od udzielania rad.</p>
+        <p class="uwaga">Superwizja służy refleksji zawodowej – nie jest terapią ani oceną Twojej pracy.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 / Organizacja spotkań -->
+  <section class="sekcja sekcja--piasek" aria-labelledby="organizacja-naglowek">
+    <div class="kontener kontener--waski">
+      <header class="naglowek-rozdzialu wycentrowane" data-pokaz>
+        <p class="etykieta">04 / ORGANIZACJA SPOTKAŃ</p>
+        <h2 id="organizacja-naglowek" class="naglowek-sekcji">Superwizja w Twojej szkole</h2>
+      </header>
+      <dl class="metryczka" data-pokaz style="--opoznienie: 0.1s">
+        <div><dt>GRUPY</dt><dd>Oddzielne spotkania dla nauczycieli oraz dla dyrektorów i wicedyrektorów. Każda grupa liczy do 12 osób.</dd></div>
+        <div><dt>CZAS TRWANIA</dt><dd>Jedno spotkanie superwizyjne trwa 2 godziny.</dd></div>
+        <div><dt>MIEJSCE</dt><dd>Stacjonarnie, na terenie szkoły, która zgłasza się do udziału.</dd></div>
+        <div><dt>USTALENIA</dt><dd>Terminy i liczbę spotkań uzgadniamy indywidualnie z placówką.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Kontakt -->
+  <section class="sekcja" aria-label="Kontakt">
+    <div class="kontener kontener--waski">
+      <div class="karta kontakt-karta wycentrowane" data-pokaz>
+        <p class="prowadzenie">Jeśli chcesz zorganizować superwizję dla nauczycieli lub stworzyć odrębną grupę dla dyrektorów, zapraszam do kontaktu. Wspólnie ustalimy terminy i liczbę spotkań.</p>
+        <div class="przyciski">
+          <a class="przycisk" href={strona.telefonLink}><Ikona nazwa="telefon" />Kontakt: {telefon}</a>
+          <a class="przycisk przycisk--obrys" href="/kontakt">Formularz kontaktowy</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Uklad>
+
+<style>
+  /* ---------- Najważniejsze fakty (2 godziny / do 12 osób / stacjonarnie) ---------- */
+  .fakty {
+    display: grid;
+    margin: clamp(2.25rem, 5vw, 3.25rem) 0 0;
+    padding: 0;
+    overflow: hidden;
+    list-style: none;
+    border-radius: var(--zaokraglenie);
+    background: var(--piasek);
+  }
+
+  .fakty li {
+    display: grid;
+    gap: 0.2rem;
+    padding: 1.15rem 1.25rem;
+    text-align: center;
+  }
+
+  .fakty li + li {
+    border-top: 3px solid var(--bialy);
+  }
+
+  .fakty strong {
+    color: var(--braz);
+    font-size: clamp(1.15rem, 0.7vw + 1rem, 1.4rem);
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 40rem) {
+    .fakty {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .fakty li {
+      padding: 1.5rem 1rem;
+    }
+
+    .fakty li + li {
+      border-top: 0;
+      border-left: 3px solid var(--bialy);
+    }
+  }
+
+  /* ---------- Nagłówki rozdziałów: numer / nazwa nad tytułem ---------- */
+  .naglowek-rozdzialu {
+    margin-bottom: clamp(2rem, 5vw, 3rem);
+  }
+
+  .naglowek-rozdzialu .etykieta {
+    margin: 0 0 0.85rem;
+    font-size: 0.9375rem;
+  }
+
+  .naglowek-rozdzialu .naglowek-sekcji {
+    max-width: 26ch;
+    margin: 0 auto;
+  }
+
+  /* Samo „01 / …” jest tu całym nagłówkiem, więc nie ma pod sobą tytułu */
+  .naglowek-rozdzialu .etykieta:only-child {
+    margin-bottom: 0;
+  }
+
+  /* Na wąskim ekranie długi napis zawija się, więc dekoracyjne linie przy nim znikają */
+  @media (max-width: 40rem) {
+    .naglowek-rozdzialu .etykieta::before,
+    .naglowek-rozdzialu .etykieta::after {
+      display: none;
+    }
+  }
+
+  .podnaglowek {
+    margin: clamp(2.75rem, 6vw, 3.75rem) 0 1.5rem;
+    color: var(--braz);
+    font-size: clamp(1.2rem, 0.8vw + 1rem, 1.5rem);
+    letter-spacing: 0.02em;
+  }
+
+  /* ---------- Karty ---------- */
+  .siatka-dwie {
+    display: grid;
+    gap: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  @media (min-width: 44rem) {
+    .siatka-dwie {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .karta .karta__tytul {
+    margin-bottom: 0.7rem;
+    color: var(--braz);
+    font-size: clamp(1.1rem, 0.5vw + 1rem, 1.35rem);
+    letter-spacing: 0.03em;
+  }
+
+  .karta--odstep {
+    margin-top: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .korzysci {
+    margin-top: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .korzysci .lista li:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ---------- Zdanie zamykające rozdział 02 ---------- */
+  .zakonczenie {
+    max-width: 52rem;
+    margin: clamp(3rem, 7vw, 4.5rem) auto 0;
+  }
+
+  .haslo--zdanie {
+    font-size: clamp(1.3rem, 1.4vw + 0.95rem, 2rem);
+  }
+
+  /* ---------- Uwaga: czym superwizja nie jest ---------- */
+  .uwaga {
+    margin-top: 1.75rem;
+    padding: 1.1rem 1.4rem;
+    border-left: 4px solid var(--zloto);
+    border-radius: 0 var(--zaokraglenie) var(--zaokraglenie) 0;
+    background: var(--piasek);
+  }
+
+  /* ---------- Kontakt ---------- */
+  .kontakt-karta {
+    align-items: center;
+    padding: clamp(1.75rem, 4vw, 3rem);
+    border-left: 4px solid var(--zloto);
+  }
+
+  .kontakt-karta .prowadzenie {
+    max-width: 36rem;
+  }
+
+  @media (max-width: 30rem) {
+    .kontakt-karta {
+      padding-inline: 1.25rem;
+    }
+
+    .kontakt-karta .przycisk {
+      padding-inline: 1.1rem;
+    }
+  }
+</style>

@@ -287,6 +287,21 @@ b {
   color: var(--ciemny);
 }
 
+/* Nagłówek sekcji (dawniej złoty, teraz brąz z tej samej palety) */
+.naglowek-sekcji {
+  color: var(--braz);
+  font-size: clamp(1.6rem, 2.2vw + 1rem, 2.6rem);
+}
+
+/* Wstęp pod tytułem strony (nagłówek sekcji + akapity) */
+.wstep {
+  margin-top: clamp(3rem, 7vw, 4.5rem);
+}
+
+.wstep .naglowek-sekcji {
+  margin-bottom: 1.25em;
+}
+
 /* Ramka „Dla kogo? / Czas trwania: / Miejsce realizacji:” przy szkoleniach */
 .metryczka {
   display: grid;
