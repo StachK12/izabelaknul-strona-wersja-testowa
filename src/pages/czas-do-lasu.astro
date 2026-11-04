@@ -60,11 +60,11 @@ const oferta = [
 ];
 
 
+// Szkolenia do wyboru w formularzu zapisu: te same co w kartach „OFERTA SZKOLEŃ OUTDOOROWYCH”
 const szkolenia = [
-  'Ocenianie kształtujące',
   'Jedna klasa – wiele potrzeb',
+  'Ocenianie kształtujące',
   'Nowa podstawa programowa w praktyce przedszkolnej i wczesnoszkolnej',
-  'Od wyzwania do zmiany',
 ];
 ---
 
@@ -200,9 +200,9 @@ const szkolenia = [
           nazwa="zapis-czasdolasu"
           temat="Zapis na szkolenie – czasdolasu"
           komunikatSukcesu="Dziękuję, zgłoszenie zostało wysłane."
-          listy={[{ etykieta: 'Wybierz interesujące Cię szkolenie', nazwa: 'szkolenie', opcje: szkolenia, wymagane: false }]}
-          etykietaWiadomosci="Jakie szkolenie Cię interesuje?"
-          wiadomoscWymagana={true}
+          listy={[{ etykieta: 'Wybierz interesujące Cię szkolenie', nazwa: 'szkolenie', opcje: szkolenia, wymagane: true }]}
+          etykietaWiadomosci="Wiadomość (opcjonalnie)"
+          wiadomoscWymagana={false}
         />
       </div>
 

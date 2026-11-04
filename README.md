@@ -68,7 +68,7 @@ Wszystkie wydarzenia są w jednym pliku: **`wydarzenia.yaml`** (w głównym fold
   - `/szkolenia#jedna-klasa`
   - `/szkolenia#nowa-podstawa`
   - `/szkolenia#od-wyzwania-do-zmiany`
-- `link_zapisu` to np. link do Formularza Google. Jeśli go nie podasz, przycisk „Zapisz się” prowadzi do formularza zapisu na stronie wydarzeń.
+- `link_zapisu` to np. link do Formularza Google. Jeśli go nie podasz, przycisk „Zapisz się” prowadzi do formularza na stronie Kontakt.
 
 ### Jak dodać nowe wydarzenie
 
@@ -200,7 +200,6 @@ Formularze (kontakt i zapisy na szkolenia) obsługuje **Netlify Forms**. Nie wym
   - `kontakt`
   - `zapis-szkolenia`
   - `zapis-czasdolasu`
-  - `zapis-wydarzenia`
 - **Powiadomienia e-mail o nowych zgłoszeniach** trzeba włączyć raz:
   1. W panelu Netlify wejdź w **Project configuration → Notifications → Emails and webhooks → Form submission notifications**.
   2. Kliknij **Add notification → Email notification** i wpisz adres, np. szkolenia@izabelaknul.pl.
@@ -284,5 +283,5 @@ public/_redirects        przekierowania 301 ze starych adresów WebWave
 docs/inwentaryzacja.md   pełny spis treści starej strony
 ```
 
-- **Bez skryptów śledzących:** nie ma Google Analytics, Pixela Facebooka ani zewnętrznych czcionek. Czcionka Figtree jest na naszym serwerze. Mapa Google na stronie wydarzeń ładuje się dopiero po kliknięciu.
+- **Bez skryptów śledzących:** nie ma Google Analytics, Pixela Facebooka ani zewnętrznych czcionek. Czcionka Figtree jest na naszym serwerze. Jedynym elementem z zewnątrz jest mapa Google na stronie wydarzeń, która wyświetla się od razu.
 - **Dostępność:** kontrasty WCAG AA, nawigacja klawiaturą, link „Przejdź do treści”, teksty alternatywne zdjęć. Animacje są wyłączone, gdy system ma ustawione „ogranicz ruch”.

@@ -38,7 +38,7 @@ Szczegóły:
 - gdy nie ma terminów, strona pokazuje komunikat.
 
 **Formularze (Netlify Forms):**
-- kontakt oraz trzy formularze zapisu, z polami i listami jak na starej stronie;
+- kontakt oraz dwa formularze zapisu (Dla szkoły i CZASdoLASU); szkolenia wybiera się kafelkami, a nie z rozwijanej listy;
 - zgoda RODO i pole-pułapka na spam;
 - komunikaty sukcesu i błędu po polsku, błędy opisane przy konkretnych polach;
 - działają też bez JavaScriptu.
@@ -67,7 +67,7 @@ Szczegóły:
 
 **Prywatność:**
 - brak skryptów śledzących i banera cookie;
-- mapa Google ładuje się dopiero po kliknięciu.
+- jedynym elementem z zewnątrz jest mapa Google na stronie wydarzeń. Od 4.11.2026 wyświetla się od razu, bez klikania (wcześniej ładowała się dopiero po kliknięciu).
 
 **Polityka prywatności:** przeniesiona 1:1, w łatwym do edycji pliku `src/tresci/polityka-prywatnosci.md`.
 
@@ -115,7 +115,7 @@ Szczegóły:
    - nazwa „EduMastermind” występuje tylko na stronie głównej;
    - skrót „NVC” nie jest objaśniony;
    - cytat Miki Kashtan jest bez źródła.
-4. **Formularz zapisu na /szkolenia** ma opcję „Co każdy rodzic powinien wiedzieć?”, choć opis tego warsztatu jest ukryty. Formularz na CZASdoLASU ma „Od wyzwania do zmiany”, którego nie ma w ofercie outdoorowej.
+4. **Formularze zapisu** – rozwiązane 4.11.2026: na /szkolenia do wyboru są tylko 4 szkolenia z tej strony, a na CZASdoLASU tylko 3 szkolenia outdoorowe.
 5. **Niespójności w tekstach:**
    - „Trzy godziny pracy…” przy planie dnia 09:00–15:00;
    - kropki na końcu tytułów szkoleń raz są, raz ich nie ma;
@@ -133,7 +133,7 @@ Szczegóły:
 
 7. **E-mail w stopce:** na stronie nie ma adresu e-mail. Dodać szkolenia@izabelaknul.pl?
 8. **Adres:** widoczny jest tylko „Petronelów 36B”. Dopisać „98-113 Buczek”, który jest w polityce prywatności?
-9. **Zapis na wydarzenie:** zostawić Formularz Google, czy przenieść zapisy na formularz na stronie (Netlify)?
+9. **Zapis na wydarzenie:** wydarzenie ma link do Formularza Google. Wydarzenie bez takiego linku kieruje przycisk „Zapisz się” na stronę Kontakt. Zostawić Formularz Google?
 10. **Zielone „lasu”** w nazwie czasdolasu ma kontrast poniżej normy dla zwykłego tekstu. WCAG zwalnia z tego nazwy marek i logotypy, a kolorystyka miała zostać bez zmian, więc kolor zostaje.
 
 **Nowe decyzje (strona „Superwizja w szkole”):**

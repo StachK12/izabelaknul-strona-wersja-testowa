@@ -3,11 +3,9 @@ import Uklad from '../layouts/Uklad.astro';
 import Marka from '../components/Marka.astro';
 import Ikona from '../components/Ikona.astro';
 import ListaWydarzen from '../components/ListaWydarzen.astro';
-import Formularz from '../components/Formularz.astro';
 import { strona } from '../data/strona';
 
-// Mapa Google ładuje się dopiero po kliknięciu „Pokaż mapę” (do tego czasu
-// strona nie wysyła żadnego zapytania do Google).
+// Mapa Google wyświetla się od razu po wejściu na stronę.
 const pelnyAdres = `${strona.adres}, ${strona.kodPocztowy} ${strona.miejscowosc}`;
 const mapaAdres = `https://www.google.com/maps?q=${encodeURIComponent(pelnyAdres)}&output=embed`;
 const mapaTytul = `Mapa dojazdu: ${pelnyAdres}`;
@@ -17,45 +15,30 @@ const mapaTytul = `Mapa dojazdu: ${pelnyAdres}`;
   tytul="Najbliższe wydarzenia"
   opis={`Najbliższe wydarzenia w czasdolasu. Szkolenia outdoorowe odbywają się pod adresem ${strona.adres}. Zapisz się na szkolenie stacjonarne lub outdoorowe.`}
   zdjecieOg="szkolenie-jedna-klasa.jpg"
-  pasekKontaktu={false}
 >
-  <!-- Tytuł i lista wydarzeń (z pliku wydarzenia.yaml) -->
+  <!-- Tytuł i lista wydarzeń (z pliku wydarzenia.yaml).
+       „Zapisz się” przy wydarzeniu bez własnego linku prowadzi do strony Kontakt. -->
   <section class="sekcja wydarzenia-strona">
     <div class="kontener wydarzenia-strona__kontener">
       <header class="tytul-strony" data-pokaz>
         <h1>Najbliższe wydarzenia w <Marka /></h1>
       </header>
       <div data-pokaz style="--opoznienie: 0.1s">
-        <ListaWydarzen domyslnyZapis="#zapisy" poziomNaglowka={2} />
+        <ListaWydarzen poziomNaglowka={2} />
       </div>
     </div>
   </section>
 
   <!-- Miejsce szkoleń outdoorowych i mapa -->
-  <section class="sekcja sekcja--piasek miejsce" aria-labelledby="miejsce-naglowek">
+  <section class="sekcja miejsce" aria-labelledby="miejsce-naglowek">
     <div class="kontener wycentrowane">
       <div data-pokaz>
         <h2 id="miejsce-naglowek" class="miejsce__naglowek">Szkolenia outdoorowe w <Marka /> odbywają się pod adresem</h2>
         <p class="miejsce__adres"><Ikona nazwa="pinezka" /><span>{strona.adres}</span></p>
       </div>
 
-      <div class="mapa" data-mapa data-src={mapaAdres} data-tytul={mapaTytul} data-pokaz style="--opoznienie: 0.1s">
-        <div class="mapa__zaslona" data-mapa-zaslona>
-          <svg class="mapa__tlo" viewBox="0 0 800 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
-            <rect width="800" height="460" fill="#efe7d9" />
-            <path d="M-20 120c120 30 200-40 330-10s210 120 520 60" fill="none" stroke="#e3d6c0" stroke-width="2" />
-            <path d="M-20 360c140-40 260 10 380-20s250-110 460-90" fill="none" stroke="#e3d6c0" stroke-width="2" />
-            <ellipse cx="150" cy="300" rx="120" ry="70" fill="#c7a879" fill-opacity="0.13" />
-            <ellipse cx="660" cy="110" rx="140" ry="80" fill="#c7a879" fill-opacity="0.12" />
-            <ellipse cx="610" cy="380" rx="90" ry="50" fill="#c7a879" fill-opacity="0.1" />
-            <path d="M-20 250c160-20 260-60 420-40s280 40 420-10" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" />
-            <path d="M400 -20c-20 120 30 200 0 260s-40 160-20 240" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" />
-            <path d="M120 -20c30 90 10 170 60 240" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" />
-            <path d="M560 480c-10-80 40-150 120-200s120-60 160-60" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" />
-          </svg>
-          <span class="mapa__pinezka"><Ikona nazwa="pinezka" /></span>
-          <button type="button" class="przycisk mapa__przycisk" data-mapa-przycisk hidden>Pokaż mapę</button>
-        </div>
+      <div class="mapa" data-pokaz style="--opoznienie: 0.1s">
+        <iframe title={mapaTytul} src={mapaAdres} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
       </div>
 
       <p class="mapa__link">
@@ -63,55 +46,16 @@ const mapaTytul = `Mapa dojazdu: ${pelnyAdres}`;
       </p>
     </div>
   </section>
-
-  <!-- Zapis na szkolenie (dawniej wyskakujące okienko tylko na telefonie) -->
-  <section class="sekcja" id="zapisy" aria-labelledby="zapisy-naglowek">
-    <div class="kontener kontener--waski">
-      <h2 id="zapisy-naglowek" class="wycentrowane">Zapisz się na szkolenie</h2>
-      <div class="karta karta--biala" data-pokaz>
-        <Formularz
-          nazwa="zapis-wydarzenia"
-          temat="Zapis na szkolenie – najbliższe wydarzenia"
-          komunikatSukcesu="Dziękuję, zgłoszenie zostało wysłane."
-          listy={[
-            {
-              etykieta: 'Jaki rodzaj szkolenia Cię interesuje?',
-              nazwa: 'rodzaj',
-              opcje: ['Stacjonarne – u mnie w placówce', 'Outdoorowe – na miejscu w czasdolasu'],
-              wymagane: true,
-            },
-          ]}
-          wiadomoscWymagana={true}
-        />
-      </div>
-    </div>
-  </section>
 </Uklad>
-
-<script>
-  // Mapa „na kliknięcie”: dopiero teraz przeglądarka łączy się z Google.
-  document.querySelectorAll<HTMLElement>('[data-mapa]').forEach((mapa) => {
-    const przycisk = mapa.querySelector<HTMLButtonElement>('[data-mapa-przycisk]');
-    if (!przycisk || !mapa.dataset.src) return;
-    przycisk.hidden = false;
-    przycisk.addEventListener('click', () => {
-      const ramka = document.createElement('iframe');
-      ramka.title = mapa.dataset.tytul ?? '';
-      ramka.src = mapa.dataset.src ?? '';
-      ramka.loading = 'lazy';
-      ramka.referrerPolicy = 'no-referrer-when-downgrade';
-      ramka.allowFullscreen = true;
-      mapa.querySelector('[data-mapa-zaslona]')?.remove();
-      mapa.append(ramka);
-      mapa.classList.add('mapa--wczytana');
-      ramka.focus();
-    });
-  });
-</script>
 
 <style>
   .wydarzenia-strona__kontener {
     max-width: calc(60rem + 2 * var(--margines));
+  }
+
+  /* Dwie białe sekcje pod rząd: mniejszy odstęp między listą wydarzeń a mapą */
+  .wydarzenia-strona {
+    padding-bottom: 0;
   }
 
   .miejsce__naglowek {
@@ -155,50 +99,7 @@ const mapaTytul = `Mapa dojazdu: ${pelnyAdres}`;
     }
   }
 
-  .mapa__zaslona {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-content: center;
-    justify-items: center;
-    gap: 1.25rem;
-    padding: 1.5rem;
-  }
-
-  .mapa__tlo {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    max-width: none;
-  }
-
-  .mapa__pinezka {
-    position: relative;
-    display: grid;
-    place-items: center;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 50%;
-    background: var(--braz);
-    color: var(--bialy);
-    box-shadow: 0 10px 24px -12px rgba(22, 26, 22, 0.6);
-  }
-
-  .mapa__pinezka :global(svg) {
-    width: 1.75rem;
-    height: 1.75rem;
-  }
-
-  .mapa__przycisk {
-    position: relative;
-  }
-
-  .mapa__przycisk[hidden] {
-    display: none;
-  }
-
-  .mapa :global(iframe) {
+  .mapa iframe {
     position: absolute;
     inset: 0;
     width: 100%;

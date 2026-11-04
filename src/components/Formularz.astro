@@ -3,11 +3,14 @@
 // Każdy formularz musi mieć własną, unikalną nazwę (prop "nazwa").
 // Etykiety pól są takie same jak na starej stronie.
 
+// Wybór jednej opcji, pokazywany jako kafelki do kliknięcia (zamiast rozwijanej listy)
 interface Lista {
   etykieta: string;
   nazwa: string;
   opcje: string[];
   wymagane?: boolean;
+  /** 2 = kafelki obok siebie (dla krótkich opcji), domyślnie jeden pod drugim */
+  kolumny?: 1 | 2;
 }
 
 interface Props {
@@ -82,21 +85,24 @@ import { strona } from '../data/strona';
 
     {
       listy.map((lista) => (
-        <div class="pole pole--cale">
-          <label for={id(lista.nazwa)}>
+        <fieldset class:list={['pole', 'pole--cale', 'wybor', lista.kolumny === 2 && 'wybor--dwie']}>
+          <legend>
             {lista.etykieta}
             {lista.wymagane && (
               <span class="wymagane" aria-hidden="true">
                 {' '}*
               </span>
             )}
-          </label>
-          <select id={id(lista.nazwa)} name={lista.nazwa} required={lista.wymagane}>
-            {lista.opcje.map((opcja) => (
-              <option value={opcja}>{opcja}</option>
+          </legend>
+          <div class="wybor__opcje">
+            {lista.opcje.map((opcja, i) => (
+              <label class="wybor__opcja">
+                <input type="radio" id={id(`${lista.nazwa}-${i + 1}`)} name={lista.nazwa} value={opcja} required={lista.wymagane} />
+                <span>{opcja}</span>
+              </label>
             ))}
-          </select>
-        </div>
+          </div>
+        </fieldset>
       ))
     }
 
@@ -131,7 +137,11 @@ import { strona } from '../data/strona';
     blad: 'Nie udało się wysłać wiadomości. Spróbuj ponownie albo zadzwoń: ',
   };
 
-  type Pole = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+  // „Pole” to jeden element .pole: zwykłe pole tekstowe, zgoda albo cała grupa kafelków wyboru.
+  type Kontrolka = HTMLInputElement | HTMLTextAreaElement;
+
+  const kontrolki = (pole: HTMLElement) => [...pole.querySelectorAll<Kontrolka>('input, textarea')];
+  const poprawne = (pole: HTMLElement) => kontrolki(pole).every((k) => k.checkValidity());
 
   const pokaz = (formularz: HTMLFormElement, tekst: string, rodzaj: 'sukces' | 'blad', ustawFokus = true) => {
     const komunikat = formularz.querySelector<HTMLElement>('.formularz__komunikat');
@@ -143,46 +153,55 @@ import { strona } from '../data/strona';
   };
 
   // Treść błędu dla konkretnego pola
-  const opisBledu = (pole: Pole) => {
-    const v = pole.validity;
-    if (pole instanceof HTMLInputElement && pole.type === 'checkbox') return 'Zaznacz zgodę, aby wysłać formularz.';
+  const opisBledu = (pole: HTMLElement) => {
+    const [k] = kontrolki(pole);
+    if (!k) return 'Sprawdź to pole.';
+    if (k.type === 'radio') return 'Wybierz jedną z opcji.';
+    if (k.type === 'checkbox') return 'Zaznacz zgodę, aby wysłać formularz.';
+    const v = k.validity;
     if (v.valueMissing) return 'To pole jest wymagane.';
-    if (v.typeMismatch && pole.type === 'email') return 'Wpisz poprawny adres e-mail, np. imie@przyklad.pl.';
-    if (v.patternMismatch && pole.type === 'tel') return 'Wpisz numer telefonu, np. 602 677 707.';
+    if (v.typeMismatch && k.type === 'email') return 'Wpisz poprawny adres e-mail, np. imie@przyklad.pl.';
+    if (v.patternMismatch && k.type === 'tel') return 'Wpisz numer telefonu, np. 602 677 707.';
     return 'Sprawdź to pole.';
   };
 
-  const nazwaPola = (pole: Pole) => {
-    if (pole instanceof HTMLInputElement && pole.type === 'checkbox') return 'Zgoda';
-    const etykieta = pole.labels?.[0]?.textContent ?? pole.name;
+  const nazwaPola = (pole: HTMLElement) => {
+    const [k] = kontrolki(pole);
+    if (k?.type === 'checkbox') return 'Zgoda';
+    const etykieta = pole.querySelector('legend')?.textContent ?? k?.labels?.[0]?.textContent ?? k?.name ?? '';
     return etykieta.replace('*', '').trim();
   };
 
-  const usunBlad = (pole: Pole) => {
-    pole.removeAttribute('aria-invalid');
-    pole.removeAttribute('aria-describedby');
-    pole.closest('.pole')?.querySelector('.pole__blad')?.remove();
+  const usunBlad = (pole: HTMLElement) => {
+    kontrolki(pole).forEach((k) => {
+      k.removeAttribute('aria-invalid');
+      k.removeAttribute('aria-describedby');
+    });
+    pole.querySelector('.pole__blad')?.remove();
   };
 
-  const pokazBlad = (pole: Pole) => {
+  const pokazBlad = (pole: HTMLElement) => {
     usunBlad(pole);
+    const lista = kontrolki(pole);
     const blad = document.createElement('p');
     blad.className = 'pole__blad';
-    blad.id = `${pole.id}-blad`;
+    blad.id = `${lista[0]?.id}-blad`;
     blad.textContent = opisBledu(pole);
-    pole.closest('.pole')?.append(blad);
-    pole.setAttribute('aria-invalid', 'true');
-    pole.setAttribute('aria-describedby', blad.id);
+    pole.append(blad);
+    lista.forEach((k) => {
+      k.setAttribute('aria-invalid', 'true');
+      k.setAttribute('aria-describedby', blad.id);
+    });
   };
 
   document.querySelectorAll<HTMLFormElement>('form[data-formularz]').forEach((formularz) => {
     formularz.noValidate = true;
-    const pola = [...formularz.querySelectorAll<Pole>('.pole input, .pole select, .pole textarea')];
+    const pola = [...formularz.querySelectorAll<HTMLElement>('.pole')];
 
     // Błąd znika, gdy pole zostanie poprawione
     pola.forEach((pole) => {
       const sprawdz = () => {
-        if (pole.getAttribute('aria-invalid') === 'true' && pole.checkValidity()) usunBlad(pole);
+        if (pole.querySelector('.pole__blad') && poprawne(pole)) usunBlad(pole);
       };
       pole.addEventListener('input', sprawdz);
       pole.addEventListener('change', sprawdz);
@@ -191,11 +210,11 @@ import { strona } from '../data/strona';
     formularz.addEventListener('submit', async (zdarzenie) => {
       zdarzenie.preventDefault();
 
-      const bledne = pola.filter((pole) => !pole.checkValidity());
+      const bledne = pola.filter((pole) => !poprawne(pole));
       pola.forEach((pole) => (bledne.includes(pole) ? pokazBlad(pole) : usunBlad(pole)));
       if (bledne.length) {
         pokaz(formularz, KOMUNIKATY.popraw + bledne.map(nazwaPola).join(', ') + '.', 'blad', false);
-        bledne[0].focus();
+        kontrolki(bledne[0])[0]?.focus();
         return;
       }
 
@@ -220,13 +239,15 @@ import { strona } from '../data/strona';
     });
   });
 
-  // Przyciski „Zapisz się na szkolenie” mogą od razu wybrać szkolenie na liście.
+  // Przyciski „Zapisz się na szkolenie” mogą od razu zaznaczyć szkolenie w formularzu.
   document.querySelectorAll<HTMLAnchorElement>('a[data-wybierz]').forEach((link) => {
     link.addEventListener('click', () => {
       const cel = document.querySelector(link.hash);
-      const lista = cel?.querySelector<HTMLSelectElement>('select');
-      const wartosc = link.dataset.wybierz;
-      if (lista && wartosc && [...lista.options].some((o) => o.value === wartosc)) lista.value = wartosc;
+      const opcje = [...(cel?.querySelectorAll<HTMLInputElement>('input[type="radio"]') ?? [])];
+      const opcja = opcje.find((o) => o.value === link.dataset.wybierz);
+      if (!opcja) return;
+      opcja.checked = true;
+      opcja.dispatchEvent(new Event('change', { bubbles: true }));
     });
   });
 </script>
@@ -274,8 +295,7 @@ import { strona } from '../data/strona';
     color: var(--braz);
   }
 
-  .pole input:not([type='checkbox']),
-  .pole select,
+  .pole input:not([type='checkbox']):not([type='radio']),
   .pole textarea {
     width: 100%;
     min-height: 3rem;
@@ -287,25 +307,133 @@ import { strona } from '../data/strona';
     font: inherit;
   }
 
-  .pole select {
-    appearance: none;
-    padding-right: 2.4rem;
-    text-overflow: ellipsis;
-    background: var(--bialy)
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237a5b2f' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
-      right 0.9rem center / 1.2rem no-repeat;
-  }
-
   .pole textarea {
     resize: vertical;
   }
 
   .pole input:focus-visible,
-  .pole select:focus-visible,
   .pole textarea:focus-visible {
     outline: 3px solid var(--braz);
     outline-offset: 2px;
     border-color: var(--ciemny);
+  }
+
+  /* ---------- Wybór jednej opcji: kafelki zamiast rozwijanej listy ---------- */
+  .wybor {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .wybor legend {
+    margin-bottom: 0.6rem;
+    padding: 0;
+    font-weight: 700;
+  }
+
+  .wybor__opcje {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  @media (min-width: 30rem) {
+    .wybor--dwie .wybor__opcje {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .pole .wybor__opcja {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-height: 3.25rem;
+    margin: 0;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--szarosc);
+    border-radius: 12px;
+    background: var(--bialy);
+    font-weight: 500;
+    line-height: 1.35;
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .pole .wybor__opcja:hover {
+    border-color: var(--braz);
+    background: var(--piasek);
+  }
+
+  .pole .wybor__opcja:has(input:checked) {
+    border-color: var(--braz);
+    background: var(--zloto-jasne);
+    box-shadow: inset 0 0 0 1px var(--braz);
+  }
+
+  .pole .wybor__opcja:has(input:focus-visible) {
+    outline: 3px solid var(--braz);
+    outline-offset: 2px;
+  }
+
+  .pole .wybor__opcja:has(input[aria-invalid='true']) {
+    border-color: var(--blad);
+  }
+
+  /* Okrągły znacznik wyboru w kolorach strony */
+  .wybor__opcja input {
+    appearance: none;
+    display: grid;
+    place-content: center;
+    flex: none;
+    width: 1.35rem;
+    height: 1.35rem;
+    margin: 0;
+    border: 2px solid var(--braz);
+    border-radius: 50%;
+    background: var(--bialy);
+    cursor: pointer;
+  }
+
+  .wybor__opcja input::before {
+    content: '';
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 50%;
+    background: var(--braz);
+    transform: scale(0);
+    transition: transform 0.15s ease;
+  }
+
+  .wybor__opcja input:checked::before {
+    transform: scale(1);
+  }
+
+  /* Gdy przeglądarka umie podświetlić cały kafelek, obwódka jest tylko na kafelku */
+  @supports selector(:has(*)) {
+    .pole .wybor__opcja input:focus-visible {
+      outline: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pole .wybor__opcja,
+    .wybor__opcja input::before {
+      transition: none;
+    }
+  }
+
+  /* Tryb wysokiego kontrastu (Windows): zwykłe przyciski wyboru systemu */
+  @media (forced-colors: active) {
+    .wybor__opcja input {
+      appearance: auto;
+    }
+
+    .wybor__opcja input::before {
+      display: none;
+    }
   }
 
   .pole [aria-invalid='true'] {

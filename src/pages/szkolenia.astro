@@ -6,14 +6,13 @@ import Ikona from '../components/Ikona.astro';
 import Formularz from '../components/Formularz.astro';
 import { strona } from '../data/strona';
 
-// Opcje listy „Wybierz interesujące Cię szkolenie” (jak na obecnej stronie).
+// Szkolenia do wyboru w formularzu zapisu: tylko te opisane na tej stronie.
 // Przyciski „Zapisz się na szkolenie” zaznaczają od razu właściwą pozycję (data-wybierz).
 const szkolenia = {
   ocenianie: 'Ocenianie kształtujące',
   jednaKlasa: 'Jedna klasa – wiele potrzeb',
   podstawa: 'Nowa podstawa programowa w praktyce przedszkolnej i wczesnoszkolnej',
   zmiana: 'Od wyzwania do zmiany',
-  rodzic: 'Co każdy rodzic powinien wiedzieć?',
 };
 
 const adresStrony = `${strona.adresStrony}/szkolenia`;
@@ -316,7 +315,7 @@ const daneStrukturalne = kursy.map((kurs) => ({
             {
               etykieta: 'Wybierz interesujące Cię szkolenie',
               nazwa: 'szkolenie',
-              opcje: [szkolenia.ocenianie, szkolenia.jednaKlasa, szkolenia.podstawa, szkolenia.zmiana, szkolenia.rodzic],
+              opcje: [szkolenia.ocenianie, szkolenia.jednaKlasa, szkolenia.podstawa, szkolenia.zmiana],
               wymagane: true,
             },
             {
@@ -324,8 +323,10 @@ const daneStrukturalne = kursy.map((kurs) => ({
               nazwa: 'miejsce',
               opcje: ['Stacjonarne – w mojej placówce', 'Outdoorowe – przyjeżdżam do czasdolasu'],
               wymagane: true,
+              kolumny: 2,
             },
           ]}
+          etykietaWiadomosci="Wiadomość (opcjonalnie)"
           wiadomoscWymagana={false}
         />
       </div>
@@ -498,7 +499,7 @@ const daneStrukturalne = kursy.map((kurs) => ({
     margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
   }
 
-  /* Na wąskim telefonie więcej miejsca na długie opcje list wyboru */
+  /* Na wąskim telefonie więcej miejsca na długie nazwy szkoleń */
   .zapisy .karta {
     padding-inline: clamp(1rem, 4vw, 2.25rem);
   }
@@ -506,11 +507,6 @@ const daneStrukturalne = kursy.map((kurs) => ({
   @media (max-width: 24rem) {
     .zapisy .karta {
       padding-inline: 0.85rem;
-    }
-
-    .zapisy :global(.pole select) {
-      padding-right: 2.4rem;
-      font-size: 1rem;
     }
   }
 </style>

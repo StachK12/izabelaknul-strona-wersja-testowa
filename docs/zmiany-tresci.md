@@ -79,14 +79,14 @@ Słowa, kolejność i wielkie litery zostały bez zmian.
 | Stopka | „Izabela Knul”, „szkolenia i mentoring” (napis z logo), menu stron, link tel: przy numerze | nawigacja |
 | Na dole podstron | pasek „Skontaktuj się” z przyciskiem „Skontaktuj się” i numerem telefonu | wymóg: wyraźne CTA na każdej podstronie |
 | Najbliższe wydarzenia | komunikat, gdy brak terminów: „Obecnie nie ma zaplanowanych terminów. Nowe wydarzenia pojawią się tutaj wkrótce – zapraszam do kontaktu.” | jedyne wydarzenie (03.06 / 10.06.2026) już minęło i schowało się automatycznie |
-| Najbliższe wydarzenia | przycisk „Pokaż mapę” i link „Otwórz w Mapach Google” | mapa ładuje się dopiero po kliknięciu (prywatność, bez skryptów Google) |
+| Najbliższe wydarzenia | link „Otwórz w Mapach Google” pod mapą | wygodny dojazd z telefonu (do 4.11.2026 był też przycisk „Pokaż mapę”, teraz mapa wyświetla się od razu) |
 | Polityka prywatności | rozwijany „Spis treści” (te same tytuły co sekcje) | łatwiejsze poruszanie się po długim tekście |
 | Przyciski „Dowiedz się więcej”, „Zapisz się…” | dopisek widoczny tylko dla czytników ekranu, np. „…o szkoleniu Ocenianie kształtujące” | dostępność (widoczny tekst bez zmian) |
 | Tytuły w Google i opisy meta | każda podstrona ma własny tytuł i opis, złożone tylko z faktów ze strony | SEO (dotąd: „Izabela Knul final » …” i puste opisy) |
 
 ## 3. Zmiany układu i formy (tekst bez zmian)
 
-- **Najbliższe wydarzenia:** formularz „Zapisz się na szkolenie” był wyskakującym okienkiem (tylko na telefonie i tablecie, nie dało się go zamknąć). Teraz jest zwykłą sekcją, widoczną na wszystkich urządzeniach.
+- **Najbliższe wydarzenia:** formularz „Zapisz się na szkolenie” był wyskakującym okienkiem (tylko na telefonie i tablecie, nie dało się go zamknąć). Od 4.11.2026 tego formularza nie ma; zastąpił go odnośnik do strony Kontakt (punkt 6).
 - **CZASdoLASU:** tytuł strony (grafiki „czasdolasu” i „szkolenia w otoczeniu natury”) ma teraz opis tekstowy dla czytników i Google. Osobny kadr zdjęcia polany dla telefonu zastąpił ten sam plik w innym kadrze.
 - **Polityka prywatności:**
   - cała jest krojem strony (Figtree), wyrównana do lewej, z prawdziwymi nagłówkami. Wcześniej był to krój Georgia z wyjustowaniem, a część śródtytułów była złota;
@@ -108,7 +108,7 @@ Były **ukryte na wszystkich urządzeniach**, więc nikt ich nie widział. Zgodn
   - ukryte okienko „Zapisz się na szkolenie - ocenianie kształtujące”.
 - **Strona „Dla rodziców”** została w całości zastąpiona stroną „Superwizja w szkole” (decyzja z 2.11.2026). Jej teksty, razem z ukrytą ofertą „STĄD. DOKĄD? PODRÓŻ BOHATERA”, są w `docs/inwentaryzacja.md` i w historii repozytorium. Stary adres `/dla-rodzicow` przekierowuje na `/superwizja-w-szkole`.
 - **Pozostałości kreatora:** okno zgody na pliki cookie (nowa strona nie używa śledzących plików cookie), angielskie przyciski galerii, puste akapity, obrazek do udostępniania z obcego szablonu „NUTRI FIT”.
-- **Mapa Google na kluczu API kreatora WebWave:** zastąpiona mapą ładowaną po kliknięciu.
+- **Mapa Google na kluczu API kreatora WebWave:** zastąpiona zwykłą mapą Google bez klucza (od 4.11.2026 wyświetla się od razu).
 
 ## 5. Strona „Superwizja w szkole” (z pliku superwizja_.docx)
 
@@ -123,3 +123,17 @@ Strona zastąpiła „Dla rodziców” (adres `/superwizja-w-szkole`, w menu w t
 | Nagłówek i stopka dokumentu („IZABELA KNUL / SZKOLENIA I MENTORING”, „OFERTA SUPERWIZJI DLA SZKÓŁ · 1”) | są | pominięte | to elementy wydruku, a nie treść strony |
 | Tytuł w Google i opis strony | brak (jest tylko tytuł pliku) | „Superwizja dla nauczycieli i dyrektorów”, a opis zbudowany wyłącznie z faktów z dokumentu (2 godziny, do 12 osób, stacjonarnie) | SEO |
 | Układ | tabele i ramki | kafelki, karty i listy w stylu strony Mentoring, w tej samej kolejności co w dokumencie | spójność ze stroną |
+
+## 6. Formularze i strona wydarzeń (4.11.2026)
+
+| Gdzie | Było | Jest |
+|---|---|---|
+| Wszystkie formularze zapisu | rozwijane listy wyboru | kafelki do kliknięcia z tymi samymi opcjami, widoczne od razu |
+| CZASdoLASU, formularz zapisu | 4 szkolenia do wyboru (z „Od wyzwania do zmiany”), wybór nieobowiązkowy | 3 szkolenia z kart „OFERTA SZKOLEŃ OUTDOOROWYCH”, w tej samej kolejności; wybór szkolenia jest wymagany |
+| CZASdoLASU, formularz zapisu | pole „Jakie szkolenie Cię interesuje?” (wymagane) | „Wiadomość (opcjonalnie)” |
+| Dla szkoły, formularz zapisu | 5 szkoleń do wyboru (z „Co każdy rodzic powinien wiedzieć?”) | 4 szkolenia opisane na tej stronie |
+| Dla szkoły, formularz zapisu | pole „Wiadomość” (nieobowiązkowe) | „Wiadomość (opcjonalnie)”, tak samo jak na CZASdoLASU |
+| Dla szkoły, „Miejsce realizacji szkolenia” | rozwijana lista | dwa kafelki obok siebie |
+| Najbliższe wydarzenia | formularz „Zapisz się na szkolenie” (z wyborem „Stacjonarne – u mnie w placówce” / „Outdoorowe – na miejscu w czasdolasu”) | usunięty; zamiast niego pasek „Skontaktuj się” z przyciskiem do strony Kontakt i numerem telefonu |
+| Najbliższe wydarzenia | „Zapisz się” przy wydarzeniu bez własnego linku prowadził do formularza na tej stronie | prowadzi do strony Kontakt |
+| Najbliższe wydarzenia | mapa po kliknięciu „Pokaż mapę” | mapa Google widoczna od razu, przycisk „Pokaż mapę” usunięty |

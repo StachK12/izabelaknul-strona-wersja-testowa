@@ -21,7 +21,7 @@
 #   opis             – krótki opis (opcjonalne)
 #   zdjecie          – nazwa pliku z folderu zdjecia/ (opcjonalne)
 #   link_wiecej      – adres strony z opisem szkolenia (opcjonalne)
-#   link_zapisu      – adres formularza zapisu (opcjonalne; gdy pusty, przycisk prowadzi do formularza na stronie)
+#   link_zapisu      – adres formularza zapisu (opcjonalne; gdy pusty, przycisk prowadzi do formularza na stronie Kontakt)
 # ================================================================
 
 - tytul: "Jedna klasa – wiele potrzeb"
