@@ -297,33 +297,65 @@ Stronę testową łatwo odróżnić: ma żółty pasek „WERSJA TESTOWA” u g�
 
 ## 9. Materiały dla uczestników (za kluczem)
 
-Zakładka **Materiały** (adres `/materialy`) to miejsce na prezentacje, szablony i dokumenty dla uczestników szkoleń. Pliki są pogrupowane (np. jedna grupa = jedno szkolenie), a każda grupa ma **własny klucz dostępu**. Uczestnik wpisuje klucz na stronie i może pobierać pliki prosto ze strony; dostęp na jego urządzeniu pamiętany jest 30 dni. Bez klucza nie da się otworzyć ani listy plików, ani samych plików (pilnuje tego mały program uruchamiany na serwerach Netlify). Listy i pliki nie trafiają do Google.
+Zakładka **Materiały** (adres `/materialy`) pokazuje listę zestawów materiałów, np. po jednym na szkolenie. Przy każdym zestawie jest pole na **klucz dostępu**. Uczestnik wpisuje klucz przy swoim zestawie i może pobierać pliki prosto ze strony; dostęp na jego urządzeniu pamiętany jest 30 dni. Każdy zestaw ma **własny klucz**, który otwiera tylko ten zestaw. Bez klucza nie da się otworzyć ani spisu plików, ani samych plików (pilnuje tego mały program uruchamiany na serwerach Netlify). Spisy i pliki nie trafiają do Google; publiczna jest tylko lista nazw zestawów.
+
+Na start są trzy przykładowe zestawy (z tym samym przykładowym plikiem PDF pod różnymi nazwami):
+
+| Zestaw na stronie | `id` (folder) |
+| --- | --- |
+| Ocenianie kształtujące | `ocenianie-ksztaltujace` |
+| CZASdoLASU – zajęcia w terenie | `czas-do-lasu` |
+| Mentoring EduMastermind | `mentoring` |
 
 Trzy elementy:
 
 | Co | Gdzie |
 | --- | --- |
-| Pliki do pobrania | folder **`materialy/<id grupy>/`**, np. `materialy/przyklad/prezentacja.pdf` |
-| Nazwy grup i opisy plików | plik **`materialy.yaml`** (w głównym folderze) |
+| Pliki do pobrania | folder **`materialy/<id>/`**, np. `materialy/mentoring/kontrakt.pdf` |
+| Nazwy zestawów i opisy plików | plik **`materialy.yaml`** (w głównym folderze) |
 | Klucze dostępu | panel Netlify, zmienna **`KLUCZE_MATERIALOW`** (nie w repozytorium, bo jest publiczne) |
 
-### Jak dodać plik do istniejącej grupy
+### Jak utworzyć klucze do zestawów
 
-1. Na GitHubie wejdź do folderu `materialy/<id grupy>/` (np. `materialy/przyklad/`).
+1. Wymyśl osobny klucz dla każdego zestawu. Dobry klucz ma co najmniej 8 znaków i nie jest oczywisty (nie „szkolenie”, nie nazwa zestawu). Może mieć spacje i polskie znaki; wielkość liter nie ma znaczenia. Nie używaj w nim przecinka, dwukropka, średnika ani znaku równości.
+2. W panelu Netlify otwórz projekt, potem **Project configuration → Environment variables**. Jeśli zmiennej `KLUCZE_MATERIALOW` jeszcze nie ma, kliknij **Add a variable**; jeśli jest, **Options → Edit**.
+3. Klucz zmiennej: `KLUCZE_MATERIALOW`. Zaznacz **Same value for all deploy contexts**. Wartość: w każdej linii `id zestawu`, dwukropek i klucz, np.
+
+   ```
+   ocenianie-ksztaltujace: zielona tablica 2026
+   czas-do-lasu: mech-i-paprocie
+   mentoring: EduMastermind-jesien
+   ```
+
+   Zamiast nowych linii można użyć przecinków. `id` musi być dokładnie taki jak w `materialy.yaml` (nazwa folderu).
+4. Zapisz, a potem kliknij **Deploys → Trigger deploy → Clear cache and deploy project**. Program sprawdzający klucze dostaje wartość zmiennej przy budowaniu strony, więc **po każdej zmianie kluczy trzeba uruchomić deploy**.
+5. Po 1–3 minutach wejdź na `/materialy` i wpisz klucz przy zestawie. Klucz wpisany przy innym zestawie pokaże komunikat „Ten klucz nie otwiera tych materiałów”.
+
+Zasady:
+
+- Zestaw bez klucza w `KLUCZE_MATERIALOW` jest widoczny na liście, ale nikt go nie otworzy. Żeby schować zestaw całkiem, usuń jego wpis z `materialy.yaml`.
+- Po **każdej zmianie** zmiennej (i deployu) wszyscy uczestnicy muszą wpisać klucz ponownie. To celowe: tak unieważnia się stary klucz po zakończonej edycji szkolenia; wystarczy zmienić klucz tego jednego zestawu.
+- Zmienną trzeba ustawić **w obu projektach Netlify**: właściwym i testowym (mogą mieć inne klucze).
+- Klucz jest wspólny dla całej grupy uczestników, więc można go przekazać dalej. To ochrona przed przypadkowym dostępem i Google, nie przed zdeterminowaną osobą. Dla wrażliwych dokumentów użyj innego rozwiązania.
+- Dla zaawansowanych: linia `*: jakiś-klucz` daje klucz otwierający wszystkie zestawy (np. dla Ciebie). Domyślnie takiego klucza nie ma.
+
+### Jak dodać plik do istniejącego zestawu
+
+1. Na GitHubie wejdź do folderu `materialy/<id>/` (np. `materialy/mentoring/`).
 2. Kliknij **Add file → Upload files**, przeciągnij plik, zatwierdź **Commit changes**.
 3. Po 1–3 minutach plik jest na stronie, pod nazwą zrobioną z nazwy pliku (np. `prezentacja_dzien-1.pdf` → „prezentacja dzien 1”).
-4. Żeby plik miał ładną nazwę i opis, dopisz go w `materialy.yaml` w sekcji `pliki:` tej grupy (patrz przykład niżej). Pliki z listy pokazują się pierwsze, pozostałe za nimi.
+4. Żeby plik miał ładną nazwę i opis, dopisz go w `materialy.yaml` w sekcji `pliki:` tego zestawu (patrz przykład niżej). Pliki z listy pokazują się pierwsze, pozostałe za nimi.
 
-> Przez stronę GitHuba wgrasz plik **do 25 MB**. Prezentacje warto zapisać jako PDF i zmniejszyć (np. „Zmniejsz rozmiar” w Acrobacie albo eksport PowerPointa w jakości „do Internetu”). Nagrań wideo nie wgrywaj do repozytorium: wstaw je na YouTube (film niepubliczny) albo Dysk Google i podaj link w opisie grupy. Repozytorium pamięta każdą wgraną wersję pliku, więc lepiej wgrać jedną przemyślaną wersję niż dziesięć poprawek.
+> Przez stronę GitHuba wgrasz plik **do 25 MB**. Prezentacje warto zapisać jako PDF i zmniejszyć (np. „Zmniejsz rozmiar” w Acrobacie albo eksport PowerPointa w jakości „do Internetu”). Nagrań wideo nie wgrywaj do repozytorium: wstaw je na YouTube (film niepubliczny) albo Dysk Google i podaj link w opisie zestawu. Repozytorium pamięta każdą wgraną wersję pliku, więc lepiej wgrać jedną przemyślaną wersję niż dziesięć poprawek.
 
-### Jak dodać nową grupę (np. nowe szkolenie)
+### Jak dodać nowy zestaw (np. nowe szkolenie)
 
-1. Utwórz folder `materialy/<id>/` i wgraj do niego przynajmniej jeden plik. Na GitHubie: **Add file → Upload files**, a w polu nazwy ścieżki wpisz `materialy/nowe-id/` przed nazwą pliku. `id` to tylko małe litery bez polskich znaków, cyfry i myślniki, np. `ocenianie-2026`.
-2. W `materialy.yaml` dopisz grupę:
+1. Utwórz folder `materialy/<id>/` i wgraj do niego przynajmniej jeden plik. Na GitHubie: **Add file → Upload files**, a w polu nazwy ścieżki wpisz `materialy/nowe-id/` przed nazwą pliku. `id` to tylko małe litery bez polskich znaków, cyfry i myślniki, np. `ocenianie-2027`.
+2. W `materialy.yaml` dopisz zestaw:
 
    ```yaml
-   - id: ocenianie-2026
-     nazwa: "Ocenianie kształtujące – listopad 2026"
+   - id: ocenianie-2027
+     nazwa: "Ocenianie kształtujące – marzec 2027"
      opis: "Materiały z warsztatów w czasdolasu."
      pliki:
        - plik: prezentacja.pdf
@@ -334,35 +366,15 @@ Trzy elementy:
    ```
 
    Pola `opis` i cała sekcja `pliki` są opcjonalne. Zasady wcięć są takie same jak w `wydarzenia.yaml` (punkt 2).
-3. Dodaj klucz dla tej grupy w Netlify (niżej). Bez klucza grupy nie da się otworzyć.
+3. Dodaj klucz dla tego `id` w Netlify i uruchom deploy (patrz wyżej). Bez klucza zestawu nie da się otworzyć.
 
-Żeby grupę schować, usuń jej wpis z `materialy.yaml` (folder może zostać) albo usuń jej klucz z Netlify.
-
-### Klucze dostępu w Netlify
-
-1. W panelu Netlify otwórz projekt, potem **Project configuration → Environment variables → Add a variable**.
-2. Klucz zmiennej: `KLUCZE_MATERIALOW`. Wartość: pary `id grupy: klucz`, oddzielone przecinkami albo każda w osobnej linii, np.
-
-   ```
-   przyklad: las-2026
-   ocenianie-2026: kreda i tablica
-   ```
-
-3. Zapisz. Zmiana działa od razu, bez ponownego budowania strony.
-
-Zasady:
-
-- Klucz może mieć spacje i polskie znaki; wielkość liter nie ma znaczenia. Nie używaj w nim przecinka, dwukropka ani znaku równości. Niech ma co najmniej 8 znaków i nie będzie łatwy do zgadnięcia (nie „szkolenie”).
-- Ten sam klucz możesz wpisać przy kilku grupach, wtedy otwiera wszystkie.
-- Specjalna grupa `*` to klucz otwierający wszystkie materiały (np. dla Ciebie): `*: moj-klucz-glowny`.
-- Po **każdej zmianie** tej zmiennej wszyscy uczestnicy muszą wpisać klucz ponownie (to celowe: tak unieważnia się stary klucz po zakończonej edycji szkolenia).
-- Zmienną trzeba ustawić **w obu projektach Netlify**: właściwym i testowym (mogą mieć inne klucze).
-- Klucz jest wspólny dla całej grupy, więc uczestnik może go przekazać dalej. To ochrona przed przypadkowym dostępem i Google, nie przed zdeterminowaną osobą. Dla wrażliwych dokumentów użyj innego rozwiązania.
+Żeby usunąć przykładowe zestawy, skasuj ich wpisy z `materialy.yaml` i foldery z `materialy/` (na GitHubie: otwórz plik → ikona kosza → Commit).
 
 ### Gdy coś nie działa
 
-- Strona pokazuje „Materiały nie są jeszcze udostępnione” → w Netlify nie ma zmiennej `KLUCZE_MATERIALOW` albo jest pusta.
-- „Te materiały wymagają innego klucza” → wpisany klucz jest dobry, ale otwiera inną grupę niż ta, do której prowadził link.
+- Strona pokazuje „Materiały nie są jeszcze udostępnione” → w Netlify nie ma zmiennej `KLUCZE_MATERIALOW`, jest pusta albo została dodana po ostatnim deployu. Sprawdź wartość i uruchom **Trigger deploy**.
+- „Ten klucz nie otwiera tych materiałów” → klucz jest dobry, ale należy do innego zestawu.
+- „Ten klucz jest nieprawidłowy” → literówka w kluczu albo w `id` przed dwukropkiem w Netlify.
 - Budowanie strony kończy się błędem po zmianie `materialy.yaml` → komunikat w Netlify (Deploys → nieudany deploy) mówi, co poprawić: najczęściej brak folderu dla `id`, literówka w nazwie pliku albo złe wcięcia.
 
 ---
@@ -391,8 +403,8 @@ src/layouts/Uklad.astro  wspólny układ: meta SEO, Open Graph, dane strukturaln
 src/styles/global.css    kolory, czcionki, odstępy (kolorystyka obecnej strony)
 src/data/strona.ts       telefon, adres, media społecznościowe, menu
 src/pages/robots.txt.ts  robots.txt (na stronie testowej blokuje wyszukiwarki)
-materialy.yaml           grupy materiałów dla uczestników i opisy plików
-materialy/               pliki do pobrania, po jednym folderze na grupę
+materialy.yaml           zestawy materiałów dla uczestników i opisy plików
+materialy/               pliki do pobrania, po jednym folderze na zestaw
 src/lib/materialy.ts     odczyt materialy.yaml i folderu materialy/
 src/pages/materialy.astro, src/pages/materialy/  strona z kluczem, listy plików, adresy plików
 netlify/edge-functions/materialy.ts  bramka: sprawdza klucz (KLUCZE_MATERIALOW) przed /materialy/…

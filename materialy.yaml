@@ -1,7 +1,7 @@
 # ================================================================
 #  MATERIAŁY DLA UCZESTNIKÓW
 #  Ten plik zasila zakładkę /materialy. Pliki do pobrania leżą w folderze
-#  materialy/<id grupy>/ (np. materialy/przyklad/prezentacja.pdf).
+#  materialy/<id grupy>/ (np. materialy/mentoring/kontrakt.pdf).
 # ================================================================
 #
 #  Każda grupa (np. jedno szkolenie) ma własny folder i własny klucz dostępu.
@@ -22,10 +22,30 @@
 #            których tu nie ma, też pojawią się na stronie, tylko pod nazwą pliku.
 #            Kolejność na stronie: najpierw pliki z tej listy, potem pozostałe.
 
-- id: przyklad
-  nazwa: "Przykładowe szkolenie"
-  opis: "Materiały z warsztatów – prezentacja, szablony i dokumenty do pobrania."
+- id: ocenianie-ksztaltujace
+  nazwa: "Ocenianie kształtujące"
+  opis: "Materiały z warsztatów dla nauczycieli: prezentacja i karta do pracy z uczniami."
   pliki:
-    - plik: IPP_26-27_Team_46_Team_Contract_v3.pdf
-      nazwa: "Kontrakt zespołu (przykładowy plik PDF)"
-      opis: "Wzór kontraktu do pracy w grupie."
+    - plik: prezentacja-ocenianie-ksztaltujace.pdf
+      nazwa: "Prezentacja z warsztatów"
+      opis: "Slajdy z obu dni szkolenia."
+    - plik: karta-informacji-zwrotnej.pdf
+      nazwa: "Karta informacji zwrotnej"
+      opis: "Szablon do wydrukowania dla uczniów."
+
+- id: czas-do-lasu
+  nazwa: "CZASdoLASU – zajęcia w terenie"
+  opis: "Scenariusze i pomoce z warsztatów outdoorowych."
+  pliki:
+    - plik: scenariusze-zajec-w-lesie.pdf
+      nazwa: "Scenariusze zajęć w lesie"
+
+- id: mentoring
+  nazwa: "Mentoring EduMastermind"
+  opis: "Dokumenty dla uczestników programu mentoringowego."
+  pliki:
+    - plik: kontrakt-mentoringowy.pdf
+      nazwa: "Kontrakt mentoringowy"
+      opis: "Wzór kontraktu do wypełnienia na pierwszym spotkaniu."
+    - plik: arkusz-celow.pdf
+      nazwa: "Arkusz celów"

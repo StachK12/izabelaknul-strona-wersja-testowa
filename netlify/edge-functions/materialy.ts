@@ -2,7 +2,8 @@
 // do /materialy/… (ustawienie w netlify.toml) i sprawdza klucz dostępu.
 //
 //  /materialy                 – strona z polem na klucz, publiczna
-//  POST /materialy/wejscie    – sprawdza klucz; dobry → ciasteczko + przejście do grupy
+//  POST /materialy/wejscie    – sprawdza klucz (pole „klucz”, opcjonalnie „grupa” – zestaw,
+//                               przy którym wpisano klucz); dobry → ciasteczko + przejście do grupy
 //  /materialy/wyjscie         – kasuje ciasteczko
 //  /materialy/<grupa>         – lista plików grupy, tylko z ciasteczkiem tej grupy
 //  /materialy/pliki/<grupa>/… – same pliki, tylko z ciasteczkiem tej grupy
@@ -38,7 +39,7 @@ export default async (zadanie: Request, kontekst: Context) => {
 
   if (klucze.size === 0) return przekieruj(url, `${SCIEZKA}?blad=brak`);
   const dostep = await odczytajDostep(zadanie, klucze);
-  if (!dostep.includes('*') && !dostep.includes(grupa)) return przekieruj(url, `${SCIEZKA}?blad=dostep`);
+  if (!dostep.includes('*') && !dostep.includes(grupa)) return przekieruj(url, `${SCIEZKA}?blad=dostep&grupa=${grupa}`);
 
   const odpowiedz = await kontekst.next();
   const chroniona = new Response(odpowiedz.body, odpowiedz);
@@ -68,25 +69,32 @@ function wczytajKlucze(tekst: string | undefined): Klucze {
 async function wejscie(zadanie: Request, url: URL, klucze: Klucze): Promise<Response> {
   if (zadanie.method !== 'POST') return przekieruj(url, SCIEZKA);
   let wpisany = '';
+  let grupa = ''; // zestaw, przy którym wpisano klucz (puste = formularz bez wskazania zestawu)
   try {
-    wpisany = String((await zadanie.formData()).get('klucz') ?? '');
+    const dane = await zadanie.formData();
+    wpisany = String(dane.get('klucz') ?? '');
+    grupa = String(dane.get('grupa') ?? '').trim().toLowerCase();
   } catch {
     return przekieruj(url, `${SCIEZKA}?blad=klucz`);
   }
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(grupa)) grupa = '';
+  const przyGrupie = grupa ? `&grupa=${grupa}` : '';
   if (klucze.size === 0) return przekieruj(url, `${SCIEZKA}?blad=brak`);
 
   const nowe = klucze.get(normalizuj(wpisany));
   if (!nowe) {
     await new Promise((r) => setTimeout(r, 600)); // zły klucz: chwila zwłoki utrudnia zgadywanie
-    return przekieruj(url, `${SCIEZKA}?blad=klucz`);
+    return przekieruj(url, `${SCIEZKA}?blad=klucz${przyGrupie}`);
   }
+  // Klucz jest dobry, ale do innego zestawu niż ten, przy którym go wpisano.
+  if (grupa && !nowe.includes('*') && !nowe.includes(grupa)) return przekieruj(url, `${SCIEZKA}?blad=dostep${przyGrupie}`);
 
   const dotychczas = await odczytajDostep(zadanie, klucze);
   const grupy = [...new Set([...dotychczas, ...nowe])];
   const wygasa = Math.floor(Date.now() / 1000) + WAZNOSC_S;
   const wartosc = `${grupy.join(',')}|${wygasa}`;
   const podpis = await podpisz(wartosc, klucze);
-  const dokad = nowe.includes('*') ? SCIEZKA : `${SCIEZKA}/${nowe[0]}`;
+  const dokad = grupa ? `${SCIEZKA}/${grupa}` : nowe.includes('*') ? SCIEZKA : `${SCIEZKA}/${nowe[0]}`;
   return przekieruj(url, dokad, [
     ustaw(CIASTECZKO, `${wartosc}.${podpis}`, true),
     ustaw(CIASTECZKO_INFO, grupy.join(','), false),

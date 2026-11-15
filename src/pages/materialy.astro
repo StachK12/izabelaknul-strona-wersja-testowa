@@ -1,18 +1,19 @@
 ---
-// Zakładka „Materiały”: pole na klucz dostępu. Po poprawnym kluczu bramka
-// (netlify/edge-functions/materialy.ts) przenosi na stronę grupy /materialy/<id>.
-// Ta strona jest publiczna; listy plików i same pliki wymagają klucza.
+// Zakładka „Materiały”: lista materiałów (grup z materialy.yaml), przy każdej pole na klucz.
+// Po poprawnym kluczu bramka (netlify/edge-functions/materialy.ts) przenosi na stronę
+// grupy /materialy/<id>. Sama lista jest publiczna; pliki i ich spis wymagają klucza.
 import Uklad from '../layouts/Uklad.astro';
 import Ikona from '../components/Ikona.astro';
 import { strona } from '../data/strona';
 import { wczytajMaterialy } from '../lib/materialy';
 
-const grupy = wczytajMaterialy().map(({ id, nazwa }) => ({ id, nazwa }));
+const grupy = wczytajMaterialy();
+const ileplikow = (n: number) => (n === 1 ? '1 plik' : n >= 2 && n <= 4 ? `${n} pliki` : `${n} plików`);
 ---
 
 <Uklad
   tytul="Materiały dla uczestników"
-  opis="Prezentacje, szablony i dokumenty ze szkoleń Izabeli Knul. Dostęp po wpisaniu klucza otrzymanego na szkoleniu."
+  opis="Prezentacje, szablony i dokumenty ze szkoleń Izabeli Knul. Każdy zestaw otwiera klucz otrzymany na szkoleniu."
   pasekKontaktu={false}
 >
   <section class="sekcja">
@@ -21,126 +22,161 @@ const grupy = wczytajMaterialy().map(({ id, nazwa }) => ({ id, nazwa }));
     </header>
     <div class="kontener kontener--waski">
       <p class="prowadzenie wycentrowane" data-pokaz>
-        Tu znajdziesz prezentacje, szablony i dokumenty ze szkoleń. Dostęp otwiera <strong>klucz</strong>, który uczestnicy
-        otrzymują na szkoleniu lub w wiadomości po nim.
+        Prezentacje, szablony i dokumenty ze szkoleń. Każdy zestaw otwiera <strong>klucz</strong>, który uczestnicy
+        otrzymują na szkoleniu lub w wiadomości po nim. Wpisz go przy wybranym zestawie.
       </p>
 
-      <div class="karta karta--biala dostep" data-pokaz style="--opoznienie: 0.15s">
-        <p class="dostep__komunikat" role="alert" tabindex="-1" data-komunikat hidden></p>
+      <p class="komunikat" role="alert" tabindex="-1" data-komunikat hidden></p>
 
-        <div class="dostep__otwarte" data-otwarte hidden>
-          <h2>Masz już dostęp do:</h2>
-          <ul data-lista></ul>
-        </div>
+      {grupy.length > 0 ? (
+        <ul class="grupy">
+          {grupy.map((g, i) => (
+            <li class="grupa karta karta--biala" id={`grupa-${g.id}`} data-grupa={g.id} data-pokaz style={`--opoznienie: ${0.1 * i}s`}>
+              <div class="grupa__tresc">
+                <h2 class="grupa__nazwa">{g.nazwa}</h2>
+                {g.opis && <p>{g.opis}</p>}
+                <p class="grupa__meta">{ileplikow(g.pliki.length)}</p>
+              </div>
 
-        <form class="dostep__formularz" method="POST" action="/materialy/wejscie">
-          <div class="pole">
-            <label for="klucz">Klucz dostępu</label>
-            <input id="klucz" name="klucz" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" required />
-          </div>
-          <div class="przyciski">
-            <button class="przycisk" type="submit"><Ikona nazwa="strzalka" />Otwórz materiały</button>
-          </div>
-        </form>
+              <form class="grupa__formularz" method="POST" action="/materialy/wejscie" data-formularz-klucza>
+                <input type="hidden" name="grupa" value={g.id} />
+                <label for={`klucz-${g.id}`}>Klucz dostępu</label>
+                <div class="grupa__pole">
+                  <input id={`klucz-${g.id}`} name="klucz" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" required />
+                  <button class="przycisk" type="submit">Otwórz<span class="sr-only"> „{g.nazwa}”</span></button>
+                </div>
+                <p class="grupa__blad" data-blad hidden></p>
+              </form>
 
-        <p class="dostep__pomoc">
-          Nie masz klucza albo nie działa? Napisz: <a href={`mailto:${strona.email}`}>{strona.email}</a> lub zadzwoń:{' '}
-          <a href={strona.telefonLink}>{strona.telefon}</a>.
-        </p>
-      </div>
+              <div class="grupa__otwarte" data-otwarte hidden>
+                <a class="przycisk" href={`/materialy/${g.id}`}><Ikona nazwa="strzalka" />Przejdź do materiałów</a>
+                <span>Masz już dostęp na tym urządzeniu.</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="wycentrowane" data-pokaz>Materiały pojawią się tutaj wkrótce.</p>
+      )}
+
+      <p class="pomoc wycentrowane" data-pokaz>
+        Nie masz klucza albo nie działa? Napisz: <a href={`mailto:${strona.email}`}>{strona.email}</a> lub zadzwoń:{' '}
+        <a href={strona.telefonLink}>{strona.telefon}</a>.
+      </p>
     </div>
   </section>
 </Uklad>
 
-<script define:vars={{ grupy }}>
-  // Komunikaty po powrocie z bramki (?blad=…) oraz lista grup, do których ten
-  // komputer ma już dostęp (ciasteczko informacyjne „materialy_grupy”).
-  const KOMUNIKATY = {
+<script>
+  // 1) Komunikaty po powrocie z bramki (?blad=…&grupa=…) – przy właściwym zestawie.
+  // 2) Zestawy, do których to urządzenie ma już dostęp (ciasteczko informacyjne „materialy_grupy”).
+  const BLEDY: Record<string, string> = {
     klucz: 'Ten klucz jest nieprawidłowy. Sprawdź pisownię i spróbuj ponownie.',
-    dostep: 'Te materiały wymagają innego klucza. Wpisz klucz, który otrzymano na tym szkoleniu.',
+    dostep: 'Ten klucz nie otwiera tych materiałów. Wpisz klucz otrzymany na tym szkoleniu.',
+  };
+  const OGOLNE: Record<string, string> = {
     brak: 'Materiały nie są jeszcze udostępnione. Spróbuj później.',
     wyjscie: 'Dostęp został zamknięty na tym urządzeniu.',
   };
 
   const parametry = new URLSearchParams(location.search);
-  const komunikat = document.querySelector('[data-komunikat]');
   const blad = parametry.get('blad');
-  const tekst = blad ? KOMUNIKATY[blad] : parametry.has('wyjscie') ? KOMUNIKATY.wyjscie : null;
-  if (komunikat && tekst) {
-    komunikat.textContent = tekst;
-    komunikat.dataset.rodzaj = blad ? 'blad' : 'info';
-    komunikat.hidden = false;
-    komunikat.focus();
-    history.replaceState(null, '', location.pathname);
+  const grupa = parametry.get('grupa');
+  const karta = grupa ? document.querySelector<HTMLElement>(`[data-grupa="${CSS.escape(grupa)}"]`) : null;
+
+  if (blad && BLEDY[blad] && karta) {
+    const pole = karta.querySelector<HTMLElement>('[data-blad]')!;
+    pole.textContent = BLEDY[blad];
+    pole.hidden = false;
+    const wejscie = karta.querySelector<HTMLInputElement>('input[name="klucz"]');
+    wejscie?.setAttribute('aria-invalid', 'true');
+    wejscie?.setAttribute('aria-describedby', pole.id || (pole.id = `blad-${grupa}`));
+    karta.scrollIntoView({ block: 'center' });
+    wejscie?.focus();
+  } else {
+    const tekst = blad ? (OGOLNE[blad] ?? BLEDY[blad]) : parametry.has('wyjscie') ? OGOLNE.wyjscie : null;
+    const komunikat = document.querySelector<HTMLElement>('[data-komunikat]');
+    if (komunikat && tekst) {
+      komunikat.textContent = tekst;
+      komunikat.dataset.rodzaj = blad ? 'blad' : 'info';
+      komunikat.hidden = false;
+      komunikat.focus();
+    }
   }
+  if (blad || parametry.has('wyjscie')) history.replaceState(null, '', location.pathname);
 
   const ciastko = document.cookie.split('; ').find((c) => c.startsWith('materialy_grupy='));
   const otwarte = ciastko ? decodeURIComponent(ciastko.split('=')[1]).split(',').filter(Boolean) : [];
-  const dostepne = otwarte.includes('*') ? grupy : grupy.filter((g) => otwarte.includes(g.id));
-  const lista = document.querySelector('[data-lista]');
-  if (lista && dostepne.length) {
-    lista.innerHTML = dostepne.map((g) => `<li><a href="/materialy/${g.id}">${g.nazwa}</a></li>`).join('');
-    document.querySelector('[data-otwarte]').hidden = false;
-  }
+  document.querySelectorAll<HTMLElement>('[data-grupa]').forEach((k) => {
+    if (!(otwarte.includes('*') || otwarte.includes(k.dataset.grupa!))) return;
+    k.querySelector<HTMLElement>('[data-formularz-klucza]')!.hidden = true;
+    k.querySelector<HTMLElement>('[data-otwarte]')!.hidden = false;
+  });
 </script>
 
 <style>
-  .dostep {
-    margin-top: clamp(2rem, 5vw, 3rem);
-  }
-
-  .dostep__komunikat {
-    margin: 0 0 1.5rem;
+  .komunikat {
+    max-width: 36rem;
+    margin: 2rem auto 0;
     padding: 1rem 1.25rem;
     border-radius: 10px;
     border-left: 5px solid currentColor;
     font-weight: 700;
   }
 
-  .dostep__komunikat[data-rodzaj='blad'] {
+  .komunikat[data-rodzaj='blad'] {
     background: var(--blad-tlo);
     color: var(--blad);
   }
 
-  .dostep__komunikat[data-rodzaj='info'] {
+  .komunikat[data-rodzaj='info'] {
     background: var(--sukces-tlo);
     color: var(--sukces);
   }
 
-  .dostep__otwarte {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--linia);
-  }
-
-  .dostep__otwarte h2 {
-    margin-bottom: 0.75rem;
-    font-size: 1.15rem;
-  }
-
-  .dostep__otwarte ul {
-    margin: 0;
+  .grupy {
+    display: grid;
+    gap: 1.5rem;
+    margin: clamp(2rem, 5vw, 3rem) 0 0;
     padding: 0;
     list-style: none;
   }
 
-  .dostep__otwarte li {
-    margin-bottom: 0.4rem;
+  .grupa {
+    gap: 1.25rem;
   }
 
-  .dostep__otwarte a {
-    font-weight: 700;
+  .grupa__tresc p {
+    margin: 0.4rem 0 0;
+  }
+
+  .grupa__nazwa {
+    margin: 0;
+    font-size: clamp(1.3rem, 0.8vw + 1rem, 1.7rem);
+  }
+
+  .grupa__meta {
     color: var(--braz);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
   }
 
-  .pole label {
+  .grupa__formularz label {
     display: block;
     margin-bottom: 0.4rem;
     font-weight: 700;
   }
 
-  .pole input {
-    width: 100%;
+  .grupa__pole {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .grupa__pole input {
+    flex: 1 1 14rem;
+    min-width: 0;
     min-height: 3rem;
     padding: 0.75rem 0.9rem;
     border: 1.5px solid var(--braz);
@@ -148,22 +184,51 @@ const grupy = wczytajMaterialy().map(({ id, nazwa }) => ({ id, nazwa }));
     background: var(--bialy);
     color: var(--ciemny);
     font: inherit;
-    font-size: 1.125rem;
+    font-size: 1.0625rem;
     letter-spacing: 0.04em;
   }
 
-  .pole input:focus-visible {
+  .grupa__pole input:focus-visible {
     outline: 3px solid var(--braz);
     outline-offset: 2px;
     border-color: var(--ciemny);
   }
 
-  .dostep__formularz .przyciski {
-    margin-top: 1.25rem;
+  .grupa__pole input[aria-invalid='true'] {
+    border-color: var(--blad);
+    border-width: 2px;
   }
 
-  .dostep__pomoc {
-    margin: 1.75rem 0 0;
+  .grupa__pole .przycisk {
+    flex: none;
+  }
+
+  .grupa__blad {
+    margin: 0.5rem 0 0;
+    color: var(--blad);
+    font-size: 0.9375rem;
+    font-weight: 700;
+  }
+
+  .grupa__otwarte[hidden],
+  .grupa__formularz[hidden] {
+    display: none;
+  }
+
+  .grupa__otwarte {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+  }
+
+  .grupa__otwarte span {
+    color: var(--sukces);
+    font-weight: 700;
+  }
+
+  .pomoc {
+    margin: 2.5rem 0 0;
     font-size: 0.9375rem;
   }
 </style>
