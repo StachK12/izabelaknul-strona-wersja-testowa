@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://izabelaknul.pl/sitemap-index.xml

@@ -7,8 +7,11 @@ import { getImage } from 'astro:assets';
 import Naglowek from '../components/Naglowek.astro';
 import Stopka from '../components/Stopka.astro';
 import PasekKontaktu from '../components/PasekKontaktu.astro';
+import PasekTestowy from '../components/PasekTestowy.astro';
 import { strona } from '../data/strona';
 import { zdjecie } from '../lib/zdjecia';
+// true tylko na stronie testowej (zmienna WERSJA_TESTOWA w Netlify, patrz README punkt 8).
+import { WERSJA_TESTOWA } from 'astro:env/server';
 
 interface Props {
   /** Tytuł w karcie przeglądarki i w Google (bez „| Izabela Knul” – dopisuje się sam) */
@@ -29,6 +32,7 @@ const { tytul, opis, zdjecieOg = 'strona-glowna-brzoza.jpg', pasekKontaktu = {},
 
 const sciezka = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/\/$/, '') || '/';
 const pelnyTytul = sciezka === '/' ? tytul : `${tytul} | Izabela Knul`;
+const tytulKarty = WERSJA_TESTOWA ? `TEST · ${pelnyTytul}` : pelnyTytul;
 const kanoniczny = new URL(sciezka, strona.adresStrony).href;
 
 const obrazOg = zdjecie(zdjecieOg);
@@ -89,10 +93,11 @@ const jsonLd = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{pelnyTytul}</title>
+    <title>{tytulKarty}</title>
     <meta name="description" content={opis} />
     <link rel="canonical" href={kanoniczny} />
-    {bezIndeksu && <meta name="robots" content="noindex" />}
+    {/* Strona testowa jest w całości ukryta przed Google; na właściwej tylko strony z bezIndeksu. */}
+    {(bezIndeksu || WERSJA_TESTOWA) && <meta name="robots" content={WERSJA_TESTOWA ? 'noindex, nofollow' : 'noindex'} />}
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#ffffff" />
@@ -100,7 +105,7 @@ const jsonLd = {
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pl_PL" />
     <meta property="og:site_name" content="Izabela Knul – szkolenia i mentoring" />
-    <meta property="og:title" content={pelnyTytul} />
+    <meta property="og:title" content={tytulKarty} />
     <meta property="og:description" content={opis} />
     <meta property="og:url" content={kanoniczny} />
     {ogUrl && <meta property="og:image" content={ogUrl} />}
@@ -119,6 +124,7 @@ const jsonLd = {
   </head>
   <body>
     <a class="przeskocz" href="#tresc">Przejdź do treści</a>
+    {WERSJA_TESTOWA && <PasekTestowy />}
     <Naglowek />
     <main id="tresc" tabindex="-1">
       <slot />

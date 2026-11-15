@@ -1,0 +1,82 @@
+---
+// Oznaczenia STRONY TESTOWEJ. Układ (Uklad.astro) dołącza ten plik tylko wtedy,
+// gdy w Netlify ustawiona jest zmienna WERSJA_TESTOWA = true (README, punkt 8).
+// Na właściwej stronie izabelaknul.pl nic z tego pliku się nie pojawia.
+//
+// Co robi: żółty pasek „WERSJA TESTOWA” na górze, znaczek „TEST” w rogu
+// i blokada wysyłki formularzy – żeby nikt nie zapisał się na szkolenie przez kopię testową.
+---
+
+<div class="pasek-testowy" role="note">
+  <strong>WERSJA TESTOWA</strong>
+  <span>Tu sprawdzamy zmiany przed wprowadzeniem ich na izabelaknul.pl. Formularze w tej wersji nie wysyłają wiadomości.</span>
+</div>
+<div class="znaczek-testowy" aria-hidden="true">TEST</div>
+
+<script>
+  // Formularze działają jak na prawdziwej stronie (sprawdzanie pól, komunikaty),
+  // ale wysyłka do Netlify jest udawana: nic nie wychodzi poza przeglądarkę.
+  let ostatniFormularz: HTMLFormElement | null = null;
+  document.addEventListener('submit', (z) => { ostatniFormularz = z.target as HTMLFormElement; }, true);
+
+  const prawdziwyFetch = window.fetch.bind(window);
+  window.fetch = async (adres: RequestInfo | URL, opcje?: RequestInit) => {
+    if ((opcje?.method ?? 'GET').toUpperCase() === 'POST' && String(adres) === '/') {
+      if (ostatniFormularz && !ostatniFormularz.querySelector('.info-testowe')) {
+        const info = document.createElement('p');
+        info.className = 'info-testowe';
+        info.textContent = 'Wersja testowa: wiadomość nie została wysłana. Na izabelaknul.pl trafiłaby do panelu Netlify (Forms).';
+        ostatniFormularz.append(info);
+      }
+      await new Promise((r) => setTimeout(r, 400));
+      return new Response(null, { status: 200 });
+    }
+    return prawdziwyFetch(adres, opcje);
+  };
+</script>
+
+{/* is:inline – style trafiają do HTML tylko razem z paskiem, więc właściwa strona ich nie dostaje. */}
+<style is:inline>
+  .pasek-testowy {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+    justify-content: center;
+    align-items: baseline;
+    padding: 0.6rem var(--margines);
+    background: repeating-linear-gradient(-45deg, #ffe08a 0 14px, #ffd35c 14px 28px);
+    color: var(--ciemny);
+    font-size: 0.95rem;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .pasek-testowy strong {
+    letter-spacing: 0.08em;
+  }
+
+  .znaczek-testowy {
+    position: fixed;
+    left: 0.75rem;
+    bottom: 0.75rem;
+    z-index: 200;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: #ffd35c;
+    color: var(--ciemny);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    box-shadow: 0 4px 14px -6px rgba(22, 26, 22, 0.5);
+    pointer-events: none;
+  }
+
+  .info-testowe {
+    margin-top: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: var(--zaokraglenie);
+    background: #fff3cc;
+    color: var(--ciemny);
+    font-weight: 600;
+  }
+</style>

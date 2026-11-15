@@ -2,7 +2,7 @@
 
 Strona Izabeli Knul (szkolenia, czasdolasu, mentoring). Jest zbudowana w [Astro](https://astro.build) i działa na [Netlify](https://www.netlify.com).
 
-**Najważniejsze w skrócie:** każda zmiana zapisana w tym repozytorium na GitHubie (gałąź `main`) **sama publikuje się na stronie** po 1–3 minutach. Nie trzeba niczego instalować. Wszystko da się zrobić w przeglądarce, na stronie GitHuba.
+**Najważniejsze w skrócie:** każda zmiana zapisana w tym repozytorium na GitHubie (gałąź `main`) **sama publikuje się na stronie** po 1–3 minutach. Nie trzeba niczego instalować. Wszystko da się zrobić w przeglądarce, na stronie GitHuba. Większe zmiany można najpierw sprawdzić na **stronie testowej** (gałąź `test`, punkt 8).
 
 **Repozytorium:** https://github.com/StachK12/izabelaknul-strona
 
@@ -19,7 +19,8 @@ Strona Izabeli Knul (szkolenia, czasdolasu, mentoring). Jest zbudowana w [Astro]
 5. [Formularze – gdzie trafiają wiadomości](#5-formularze--gdzie-trafiają-wiadomości)
 6. [Coś poszło nie tak?](#6-coś-poszło-nie-tak)
 7. [Podpięcie pod Netlify i domenę izabelaknul.pl](#7-podpięcie-pod-netlify-i-domenę-izabelaknulpl)
-8. [Dla zaawansowanych](#8-dla-zaawansowanych)
+8. [Strona testowa](#8-strona-testowa)
+9. [Dla zaawansowanych](#9-dla-zaawansowanych)
 
 ---
 
@@ -257,7 +258,43 @@ Formularze (kontakt i zapisy na szkolenia) obsługuje **Netlify Forms**. Nie wym
 
 ---
 
-## 8. Dla zaawansowanych
+## 8. Strona testowa
+
+Oprócz właściwej strony jest **strona testowa**, np. `https://izabelaknul-test.netlify.app` (nazwę wybiera się przy podpinaniu, patrz niżej). Służy do sprawdzania większych zmian (nowe sekcje, materiały, zdjęcia), zanim trafią na izabelaknul.pl.
+
+Działa dokładnie tak samo jak właściwa strona, tylko z innej gałęzi repozytorium: właściwa strona publikuje się z gałęzi **`main`**, testowa z gałęzi **`test`**. Każda zmiana zapisana w gałęzi `test` pojawia się na stronie testowej po 1–3 minutach i **nie dotyka** izabelaknul.pl.
+
+Stronę testową łatwo odróżnić: ma żółty pasek „WERSJA TESTOWA” u góry, znaczek „TEST” w rogu i „TEST ·” w tytule karty. Jest ukryta przed Google, a jej formularze niczego nie wysyłają (pokazują tylko komunikat). O tym wszystkim decyduje jedna zmienna `WERSJA_TESTOWA` ustawiona w projekcie testowym w Netlify. W kodzie obu stron nie ma żadnych różnic, więc przenoszenie zmian to zwykłe scalenie gałęzi.
+
+### Jak wprowadzić zmianę na stronie testowej
+
+1. Na GitHubie, nad listą plików, przełącz gałąź z `main` na **`test`** (lista rozwijana z ikoną gałęzi).
+2. Edytuj pliki jak zwykle (punkt 1). Przy zapisie upewnij się, że zaznaczone jest **„Commit directly to the `test` branch”**.
+3. Po 1–3 minutach zmiana jest na stronie testowej. Postęp widać w panelu Netlify, w projekcie testowym, zakładka **Deploys**.
+
+### Jak przenieść sprawdzoną zmianę na właściwą stronę
+
+1. Na GitHubie otwórz zakładkę **Pull requests → New pull request**.
+2. Ustaw **base: `main`** i **compare: `test`**. GitHub pokaże wszystkie różnice między stronami.
+3. Kliknij **Create pull request**, potem **Merge pull request** i **Confirm merge**.
+4. Po 1–3 minutach zmiana jest na izabelaknul.pl. Gałęzi `test` **nie usuwaj**, będzie używana dalej.
+
+> Jeśli w międzyczasie zmieniono coś bezpośrednio na właściwej stronie (np. wydarzenia), zrób też pull request w drugą stronę (**base: `test`**, **compare: `main`**), żeby strona testowa była aktualna. Inaczej przy następnym przenoszeniu GitHub może zgłosić konflikt.
+
+### Podpięcie strony testowej w Netlify (jednorazowo)
+
+1. W Netlify kliknij **Add new project → Import an existing project → GitHub** i wybierz repozytorium `izabelaknul-strona` (to samo, z którego działa właściwa strona).
+2. W polu **Branch to deploy** wybierz **`test`**.
+3. Rozwiń **Environment variables** i kliknij **Add environment variable**: klucz `WERSJA_TESTOWA`, wartość `true`.
+4. Kliknij **Deploy**. Pozostałe ustawienia (polecenie `npm run build`, folder `dist`) biorą się same z `netlify.toml`.
+5. Zmień nazwę projektu: **Project configuration → General → Project details → Change project name**, np. na `izabelaknul-test`. Adres będzie wtedy `https://izabelaknul-test.netlify.app`.
+6. **Nie podpinaj** do tego projektu domeny izabelaknul.pl i nie włączaj tu formularzy ani powiadomień.
+
+> Krok 3 jest ważny: bez zmiennej `WERSJA_TESTOWA` strona z gałęzi `test` wyglądałaby jak prawdziwa, z działającymi formularzami i widoczna dla Google.
+
+---
+
+## 9. Dla zaawansowanych
 
 Wymagany Node.js 22.
 
@@ -266,6 +303,7 @@ npm install        # instalacja zależności
 npm run dev        # podgląd na żywo: http://localhost:4321
 npm run build      # zbudowanie strony do folderu dist/
 npm run preview    # podgląd zbudowanej strony
+WERSJA_TESTOWA=true npm run build   # to samo w wersji testowej (pasek, blokada formularzy, bez indeksowania)
 ```
 
 Struktura:
@@ -279,6 +317,8 @@ src/components/          elementy wspólne (nagłówek, stopka, formularz, zdję
 src/layouts/Uklad.astro  wspólny układ: meta SEO, Open Graph, dane strukturalne
 src/styles/global.css    kolory, czcionki, odstępy (kolorystyka obecnej strony)
 src/data/strona.ts       telefon, adres, media społecznościowe, menu
+src/pages/robots.txt.ts  robots.txt (na stronie testowej blokuje wyszukiwarki)
+src/components/PasekTestowy.astro  oznaczenia strony testowej (pasek, blokada formularzy)
 public/_redirects        przekierowania 301 ze starych adresów WebWave
 docs/inwentaryzacja.md   pełny spis treści starej strony
 ```
