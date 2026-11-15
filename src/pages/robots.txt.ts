@@ -7,6 +7,8 @@ import { strona } from '../data/strona';
 
 const WLASCIWA = `User-agent: *
 Allow: /
+# Materiały dla uczestników są za kluczem dostępu.
+Disallow: /materialy/
 
 Sitemap: ${strona.adresStrony}/sitemap-index.xml
 `;

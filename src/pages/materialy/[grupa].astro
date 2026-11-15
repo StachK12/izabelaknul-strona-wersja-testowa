@@ -1,0 +1,111 @@
+---
+// Lista plików jednej grupy (np. jednego szkolenia). Strona powstaje przy budowaniu
+// dla każdej grupy z materialy.yaml, ale bramka (netlify/edge-functions/materialy.ts)
+// pokazuje ją tylko po wpisaniu klucza tej grupy. Niewidoczna dla Google.
+import Uklad from '../../layouts/Uklad.astro';
+import Ikona from '../../components/Ikona.astro';
+import { wczytajMaterialy, formatujRozmiar } from '../../lib/materialy';
+
+export function getStaticPaths() {
+  return wczytajMaterialy().map((grupa) => ({ params: { grupa: grupa.id }, props: { grupa } }));
+}
+
+const { grupa } = Astro.props;
+---
+
+<Uklad tytul={`Materiały: ${grupa.nazwa}`} opis={grupa.opis ?? `Materiały ze szkolenia „${grupa.nazwa}”.`} pasekKontaktu={false} bezIndeksu>
+  <section class="sekcja">
+    <header class="kontener tytul-strony" data-pokaz>
+      <p class="etykieta">Materiały dla uczestników</p>
+      <h1>{grupa.nazwa}</h1>
+      {grupa.opis && <p class="prowadzenie">{grupa.opis}</p>}
+    </header>
+
+    <div class="kontener kontener--waski">
+      {grupa.pliki.length > 0 ? (
+        <ul class="pliki" data-pokaz>
+          {grupa.pliki.map((p) => (
+            <li class="plik karta karta--biala">
+              <div class="plik__tresc">
+                <h2 class="plik__nazwa">{p.nazwa}</h2>
+                {p.opis && <p>{p.opis}</p>}
+                <p class="plik__meta">
+                  {p.rodzaj} · {formatujRozmiar(p.rozmiar)}
+                </p>
+              </div>
+              <a class="przycisk" href={`/materialy/pliki/${grupa.id}/${encodeURIComponent(p.plik)}`} download={p.plik}>
+                <Ikona nazwa="pobierz" />
+                Pobierz<span class="sr-only"> „{p.nazwa}”</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="wycentrowane" data-pokaz>Pliki pojawią się tutaj wkrótce.</p>
+      )}
+
+      <p class="pliki__stopka wycentrowane" data-pokaz>
+        <a href="/materialy">Wpisz inny klucz</a> · <a href="/materialy/wyjscie">Zamknij dostęp na tym urządzeniu</a>
+      </p>
+    </div>
+  </section>
+</Uklad>
+
+<style>
+  .tytul-strony .prowadzenie {
+    max-width: var(--szerokosc-tekstu);
+    margin: 1.25rem auto 0;
+  }
+
+  .pliki {
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .plik {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+  }
+
+  .plik__tresc {
+    flex: 1 1 18rem;
+    min-width: 0;
+  }
+
+  .plik__tresc p {
+    margin: 0.35rem 0 0;
+  }
+
+  .plik__nazwa {
+    margin: 0;
+    font-size: clamp(1.15rem, 0.6vw + 1rem, 1.4rem);
+    overflow-wrap: anywhere;
+  }
+
+  .plik__meta {
+    color: var(--braz);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .plik .przycisk {
+    flex: none;
+  }
+
+  .pliki__stopka {
+    margin-top: 2.5rem;
+    font-size: 0.9375rem;
+  }
+
+  .pliki__stopka a {
+    color: var(--braz);
+    font-weight: 700;
+  }
+</style>

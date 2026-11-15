@@ -16,3 +16,15 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Zakładka „Materiały”: bramka sprawdzająca klucz dostępu przed wszystkim pod /materialy/…
+# Klucze ustawia się w zmiennej KLUCZE_MATERIALOW w panelu Netlify (README, punkt 9).
+[[edge_functions]]
+  pattern = "^/materialy(/.*)?$"
+  function = "materialy"
+
+# Listy plików i same pliki nie mają trafiać do Google (strona /materialy z polem na klucz może).
+[[headers]]
+  for = "/materialy/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

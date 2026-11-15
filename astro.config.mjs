@@ -17,7 +17,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) => !page.endsWith('/dziekuje') && !page.endsWith('/404'),
+      // Listy materiałów (/materialy/<grupa>) są za kluczem, więc nie trafiają do mapy strony.
+      filter: (page) => !page.endsWith('/dziekuje') && !page.endsWith('/404') && !page.includes('/materialy/'),
     }),
   ],
 });

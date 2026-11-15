@@ -25,4 +25,5 @@ export const menu = [
   { tekst: 'Mentoring', adres: '/mentoring' },
   { tekst: 'Superwizja w szkole', adres: '/superwizja-w-szkole' },
   { tekst: 'Najbliższe wydarzenia', adres: '/najblizsze-wydarzenia' },
+  { tekst: 'Materiały', adres: '/materialy' },
 ];

@@ -2,7 +2,7 @@
 
 Strona Izabeli Knul (szkolenia, czasdolasu, mentoring). Jest zbudowana w [Astro](https://astro.build) i działa na [Netlify](https://www.netlify.com).
 
-**Najważniejsze w skrócie:** każda zmiana zapisana w tym repozytorium na GitHubie (gałąź `main`) **sama publikuje się na stronie** po 1–3 minutach. Nie trzeba niczego instalować. Wszystko da się zrobić w przeglądarce, na stronie GitHuba. Większe zmiany można najpierw sprawdzić na **stronie testowej** (gałąź `test`, punkt 8).
+**Najważniejsze w skrócie:** każda zmiana zapisana w tym repozytorium na GitHubie (gałąź `main`) **sama publikuje się na stronie** po 1–3 minutach. Nie trzeba niczego instalować. Wszystko da się zrobić w przeglądarce, na stronie GitHuba. Większe zmiany można najpierw sprawdzić na **stronie testowej** (gałąź `test`, punkt 8). Pliki dla uczestników szkoleń wgrywa się do folderu `materialy/` (punkt 9).
 
 **Repozytorium:** https://github.com/StachK12/izabelaknul-strona
 
@@ -20,7 +20,8 @@ Strona Izabeli Knul (szkolenia, czasdolasu, mentoring). Jest zbudowana w [Astro]
 6. [Coś poszło nie tak?](#6-coś-poszło-nie-tak)
 7. [Podpięcie pod Netlify i domenę izabelaknul.pl](#7-podpięcie-pod-netlify-i-domenę-izabelaknulpl)
 8. [Strona testowa](#8-strona-testowa)
-9. [Dla zaawansowanych](#9-dla-zaawansowanych)
+9. [Materiały dla uczestników (za kluczem)](#9-materiały-dla-uczestników-za-kluczem)
+10. [Dla zaawansowanych](#10-dla-zaawansowanych)
 
 ---
 
@@ -294,7 +295,79 @@ Stronę testową łatwo odróżnić: ma żółty pasek „WERSJA TESTOWA” u g�
 
 ---
 
-## 9. Dla zaawansowanych
+## 9. Materiały dla uczestników (za kluczem)
+
+Zakładka **Materiały** (adres `/materialy`) to miejsce na prezentacje, szablony i dokumenty dla uczestników szkoleń. Pliki są pogrupowane (np. jedna grupa = jedno szkolenie), a każda grupa ma **własny klucz dostępu**. Uczestnik wpisuje klucz na stronie i może pobierać pliki prosto ze strony; dostęp na jego urządzeniu pamiętany jest 30 dni. Bez klucza nie da się otworzyć ani listy plików, ani samych plików (pilnuje tego mały program uruchamiany na serwerach Netlify). Listy i pliki nie trafiają do Google.
+
+Trzy elementy:
+
+| Co | Gdzie |
+| --- | --- |
+| Pliki do pobrania | folder **`materialy/<id grupy>/`**, np. `materialy/przyklad/prezentacja.pdf` |
+| Nazwy grup i opisy plików | plik **`materialy.yaml`** (w głównym folderze) |
+| Klucze dostępu | panel Netlify, zmienna **`KLUCZE_MATERIALOW`** (nie w repozytorium, bo jest publiczne) |
+
+### Jak dodać plik do istniejącej grupy
+
+1. Na GitHubie wejdź do folderu `materialy/<id grupy>/` (np. `materialy/przyklad/`).
+2. Kliknij **Add file → Upload files**, przeciągnij plik, zatwierdź **Commit changes**.
+3. Po 1–3 minutach plik jest na stronie, pod nazwą zrobioną z nazwy pliku (np. `prezentacja_dzien-1.pdf` → „prezentacja dzien 1”).
+4. Żeby plik miał ładną nazwę i opis, dopisz go w `materialy.yaml` w sekcji `pliki:` tej grupy (patrz przykład niżej). Pliki z listy pokazują się pierwsze, pozostałe za nimi.
+
+> Przez stronę GitHuba wgrasz plik **do 25 MB**. Prezentacje warto zapisać jako PDF i zmniejszyć (np. „Zmniejsz rozmiar” w Acrobacie albo eksport PowerPointa w jakości „do Internetu”). Nagrań wideo nie wgrywaj do repozytorium: wstaw je na YouTube (film niepubliczny) albo Dysk Google i podaj link w opisie grupy. Repozytorium pamięta każdą wgraną wersję pliku, więc lepiej wgrać jedną przemyślaną wersję niż dziesięć poprawek.
+
+### Jak dodać nową grupę (np. nowe szkolenie)
+
+1. Utwórz folder `materialy/<id>/` i wgraj do niego przynajmniej jeden plik. Na GitHubie: **Add file → Upload files**, a w polu nazwy ścieżki wpisz `materialy/nowe-id/` przed nazwą pliku. `id` to tylko małe litery bez polskich znaków, cyfry i myślniki, np. `ocenianie-2026`.
+2. W `materialy.yaml` dopisz grupę:
+
+   ```yaml
+   - id: ocenianie-2026
+     nazwa: "Ocenianie kształtujące – listopad 2026"
+     opis: "Materiały z warsztatów w czasdolasu."
+     pliki:
+       - plik: prezentacja.pdf
+         nazwa: "Prezentacja z warsztatów"
+         opis: "Slajdy z obu dni."
+       - plik: szablon-karty.docx
+         nazwa: "Szablon karty obserwacji"
+   ```
+
+   Pola `opis` i cała sekcja `pliki` są opcjonalne. Zasady wcięć są takie same jak w `wydarzenia.yaml` (punkt 2).
+3. Dodaj klucz dla tej grupy w Netlify (niżej). Bez klucza grupy nie da się otworzyć.
+
+Żeby grupę schować, usuń jej wpis z `materialy.yaml` (folder może zostać) albo usuń jej klucz z Netlify.
+
+### Klucze dostępu w Netlify
+
+1. W panelu Netlify otwórz projekt, potem **Project configuration → Environment variables → Add a variable**.
+2. Klucz zmiennej: `KLUCZE_MATERIALOW`. Wartość: pary `id grupy: klucz`, oddzielone przecinkami albo każda w osobnej linii, np.
+
+   ```
+   przyklad: las-2026
+   ocenianie-2026: kreda i tablica
+   ```
+
+3. Zapisz. Zmiana działa od razu, bez ponownego budowania strony.
+
+Zasady:
+
+- Klucz może mieć spacje i polskie znaki; wielkość liter nie ma znaczenia. Nie używaj w nim przecinka, dwukropka ani znaku równości. Niech ma co najmniej 8 znaków i nie będzie łatwy do zgadnięcia (nie „szkolenie”).
+- Ten sam klucz możesz wpisać przy kilku grupach, wtedy otwiera wszystkie.
+- Specjalna grupa `*` to klucz otwierający wszystkie materiały (np. dla Ciebie): `*: moj-klucz-glowny`.
+- Po **każdej zmianie** tej zmiennej wszyscy uczestnicy muszą wpisać klucz ponownie (to celowe: tak unieważnia się stary klucz po zakończonej edycji szkolenia).
+- Zmienną trzeba ustawić **w obu projektach Netlify**: właściwym i testowym (mogą mieć inne klucze).
+- Klucz jest wspólny dla całej grupy, więc uczestnik może go przekazać dalej. To ochrona przed przypadkowym dostępem i Google, nie przed zdeterminowaną osobą. Dla wrażliwych dokumentów użyj innego rozwiązania.
+
+### Gdy coś nie działa
+
+- Strona pokazuje „Materiały nie są jeszcze udostępnione” → w Netlify nie ma zmiennej `KLUCZE_MATERIALOW` albo jest pusta.
+- „Te materiały wymagają innego klucza” → wpisany klucz jest dobry, ale otwiera inną grupę niż ta, do której prowadził link.
+- Budowanie strony kończy się błędem po zmianie `materialy.yaml` → komunikat w Netlify (Deploys → nieudany deploy) mówi, co poprawić: najczęściej brak folderu dla `id`, literówka w nazwie pliku albo złe wcięcia.
+
+---
+
+## 10. Dla zaawansowanych
 
 Wymagany Node.js 22.
 
@@ -318,6 +391,11 @@ src/layouts/Uklad.astro  wspólny układ: meta SEO, Open Graph, dane strukturaln
 src/styles/global.css    kolory, czcionki, odstępy (kolorystyka obecnej strony)
 src/data/strona.ts       telefon, adres, media społecznościowe, menu
 src/pages/robots.txt.ts  robots.txt (na stronie testowej blokuje wyszukiwarki)
+materialy.yaml           grupy materiałów dla uczestników i opisy plików
+materialy/               pliki do pobrania, po jednym folderze na grupę
+src/lib/materialy.ts     odczyt materialy.yaml i folderu materialy/
+src/pages/materialy.astro, src/pages/materialy/  strona z kluczem, listy plików, adresy plików
+netlify/edge-functions/materialy.ts  bramka: sprawdza klucz (KLUCZE_MATERIALOW) przed /materialy/…
 src/components/PasekTestowy.astro  oznaczenia strony testowej (pasek, blokada formularzy)
 public/_redirects        przekierowania 301 ze starych adresów WebWave
 docs/inwentaryzacja.md   pełny spis treści starej strony

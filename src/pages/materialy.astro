@@ -1,0 +1,169 @@
+---
+// Zakładka „Materiały”: pole na klucz dostępu. Po poprawnym kluczu bramka
+// (netlify/edge-functions/materialy.ts) przenosi na stronę grupy /materialy/<id>.
+// Ta strona jest publiczna; listy plików i same pliki wymagają klucza.
+import Uklad from '../layouts/Uklad.astro';
+import Ikona from '../components/Ikona.astro';
+import { strona } from '../data/strona';
+import { wczytajMaterialy } from '../lib/materialy';
+
+const grupy = wczytajMaterialy().map(({ id, nazwa }) => ({ id, nazwa }));
+---
+
+<Uklad
+  tytul="Materiały dla uczestników"
+  opis="Prezentacje, szablony i dokumenty ze szkoleń Izabeli Knul. Dostęp po wpisaniu klucza otrzymanego na szkoleniu."
+  pasekKontaktu={false}
+>
+  <section class="sekcja">
+    <header class="kontener tytul-strony" data-pokaz>
+      <h1>Materiały dla uczestników</h1>
+    </header>
+    <div class="kontener kontener--waski">
+      <p class="prowadzenie wycentrowane" data-pokaz>
+        Tu znajdziesz prezentacje, szablony i dokumenty ze szkoleń. Dostęp otwiera <strong>klucz</strong>, który uczestnicy
+        otrzymują na szkoleniu lub w wiadomości po nim.
+      </p>
+
+      <div class="karta karta--biala dostep" data-pokaz style="--opoznienie: 0.15s">
+        <p class="dostep__komunikat" role="alert" tabindex="-1" data-komunikat hidden></p>
+
+        <div class="dostep__otwarte" data-otwarte hidden>
+          <h2>Masz już dostęp do:</h2>
+          <ul data-lista></ul>
+        </div>
+
+        <form class="dostep__formularz" method="POST" action="/materialy/wejscie">
+          <div class="pole">
+            <label for="klucz">Klucz dostępu</label>
+            <input id="klucz" name="klucz" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" required />
+          </div>
+          <div class="przyciski">
+            <button class="przycisk" type="submit"><Ikona nazwa="strzalka" />Otwórz materiały</button>
+          </div>
+        </form>
+
+        <p class="dostep__pomoc">
+          Nie masz klucza albo nie działa? Napisz: <a href={`mailto:${strona.email}`}>{strona.email}</a> lub zadzwoń:{' '}
+          <a href={strona.telefonLink}>{strona.telefon}</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Uklad>
+
+<script define:vars={{ grupy }}>
+  // Komunikaty po powrocie z bramki (?blad=…) oraz lista grup, do których ten
+  // komputer ma już dostęp (ciasteczko informacyjne „materialy_grupy”).
+  const KOMUNIKATY = {
+    klucz: 'Ten klucz jest nieprawidłowy. Sprawdź pisownię i spróbuj ponownie.',
+    dostep: 'Te materiały wymagają innego klucza. Wpisz klucz, który otrzymano na tym szkoleniu.',
+    brak: 'Materiały nie są jeszcze udostępnione. Spróbuj później.',
+    wyjscie: 'Dostęp został zamknięty na tym urządzeniu.',
+  };
+
+  const parametry = new URLSearchParams(location.search);
+  const komunikat = document.querySelector('[data-komunikat]');
+  const blad = parametry.get('blad');
+  const tekst = blad ? KOMUNIKATY[blad] : parametry.has('wyjscie') ? KOMUNIKATY.wyjscie : null;
+  if (komunikat && tekst) {
+    komunikat.textContent = tekst;
+    komunikat.dataset.rodzaj = blad ? 'blad' : 'info';
+    komunikat.hidden = false;
+    komunikat.focus();
+    history.replaceState(null, '', location.pathname);
+  }
+
+  const ciastko = document.cookie.split('; ').find((c) => c.startsWith('materialy_grupy='));
+  const otwarte = ciastko ? decodeURIComponent(ciastko.split('=')[1]).split(',').filter(Boolean) : [];
+  const dostepne = otwarte.includes('*') ? grupy : grupy.filter((g) => otwarte.includes(g.id));
+  const lista = document.querySelector('[data-lista]');
+  if (lista && dostepne.length) {
+    lista.innerHTML = dostepne.map((g) => `<li><a href="/materialy/${g.id}">${g.nazwa}</a></li>`).join('');
+    document.querySelector('[data-otwarte]').hidden = false;
+  }
+</script>
+
+<style>
+  .dostep {
+    margin-top: clamp(2rem, 5vw, 3rem);
+  }
+
+  .dostep__komunikat {
+    margin: 0 0 1.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    border-left: 5px solid currentColor;
+    font-weight: 700;
+  }
+
+  .dostep__komunikat[data-rodzaj='blad'] {
+    background: var(--blad-tlo);
+    color: var(--blad);
+  }
+
+  .dostep__komunikat[data-rodzaj='info'] {
+    background: var(--sukces-tlo);
+    color: var(--sukces);
+  }
+
+  .dostep__otwarte {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--linia);
+  }
+
+  .dostep__otwarte h2 {
+    margin-bottom: 0.75rem;
+    font-size: 1.15rem;
+  }
+
+  .dostep__otwarte ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .dostep__otwarte li {
+    margin-bottom: 0.4rem;
+  }
+
+  .dostep__otwarte a {
+    font-weight: 700;
+    color: var(--braz);
+  }
+
+  .pole label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+  }
+
+  .pole input {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.75rem 0.9rem;
+    border: 1.5px solid var(--braz);
+    border-radius: 10px;
+    background: var(--bialy);
+    color: var(--ciemny);
+    font: inherit;
+    font-size: 1.125rem;
+    letter-spacing: 0.04em;
+  }
+
+  .pole input:focus-visible {
+    outline: 3px solid var(--braz);
+    outline-offset: 2px;
+    border-color: var(--ciemny);
+  }
+
+  .dostep__formularz .przyciski {
+    margin-top: 1.25rem;
+  }
+
+  .dostep__pomoc {
+    margin: 1.75rem 0 0;
+    font-size: 0.9375rem;
+  }
+</style>

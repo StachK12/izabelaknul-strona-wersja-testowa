@@ -1,0 +1,31 @@
+# ================================================================
+#  MATERIAŁY DLA UCZESTNIKÓW
+#  Ten plik zasila zakładkę /materialy. Pliki do pobrania leżą w folderze
+#  materialy/<id grupy>/ (np. materialy/przyklad/prezentacja.pdf).
+# ================================================================
+#
+#  Każda grupa (np. jedno szkolenie) ma własny folder i własny klucz dostępu.
+#  Klucze NIE są w tym pliku (repozytorium jest publiczne). Ustawia się je
+#  w panelu Netlify, w zmiennej KLUCZE_MATERIALOW – patrz README, punkt 9.
+#
+#  Jak dodać grupę?
+#   1. Utwórz folder materialy/<id>/ i wgraj do niego pliki.
+#   2. Skopiuj blok od „- id:” na dół tego pliku i zmień wartości.
+#   3. Dodaj klucz dla tego id w Netlify (KLUCZE_MATERIALOW).
+#
+#  Pola:
+#   id     – nazwa folderu w materialy/: tylko małe litery bez polskich znaków,
+#            cyfry i myślniki, np. ocenianie-2026 (wymagane)
+#   nazwa  – tytuł pokazywany na stronie (wymagane)
+#   opis   – krótki opis pod tytułem (opcjonalne)
+#   pliki  – lista plików z ładną nazwą i opisem (opcjonalne). Pliki z folderu,
+#            których tu nie ma, też pojawią się na stronie, tylko pod nazwą pliku.
+#            Kolejność na stronie: najpierw pliki z tej listy, potem pozostałe.
+
+- id: przyklad
+  nazwa: "Przykładowe szkolenie"
+  opis: "Materiały z warsztatów – prezentacja, szablony i dokumenty do pobrania."
+  pliki:
+    - plik: IPP_26-27_Team_46_Team_Contract_v3.pdf
+      nazwa: "Kontrakt zespołu (przykładowy plik PDF)"
+      opis: "Wzór kontraktu do pracy w grupie."
